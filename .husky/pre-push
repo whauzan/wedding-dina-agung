@@ -1,0 +1,9 @@
+echo "🔍 Running pre-push checks..."
+
+# Type check
+pnpm type-check
+
+# Build check
+pnpm build
+
+echo "✅ All checks passed!"
