@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-slate: #99a2b1;
+  --color-cream: #f7f5f0;
+  --color-ink: #2b2b2b;
+  --color-seal: #8b2e2e;
+  --color-ash: #C0C0C0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-slate: var(--color-slate);
+  --color-cream: var(--color-cream);
+  --color-ink: var(--color-ink);
+  --color-seal: var(--color-seal);
+  --color-ash: var(--color-ash);
+  --font-serif: var(--font-cormorant);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-cormorant), serif;
+}
+
+/* Plaster/paper texture from mockups, tiled at low opacity with a soft-light
+   blend so it reads as subtle grain rather than a visible repeating image. */
+.bg-texture {
+  position: relative;
+}
+
+.bg-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: soft-light;
+  background-image: url("/texture.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
