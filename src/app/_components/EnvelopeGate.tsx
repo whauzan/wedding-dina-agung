@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useScrollLock } from "../_hooks/useScrollLock";
 import { InvitationIntro } from "./InvitationIntro";
 import { VerseSection } from "./VerseSection";
+import { GroomBrideSection } from "./GroomBrideSection";
 import Image from "next/image";
 
 type Phase = "sealed" | "opening" | "expanding" | "slate" | "names";
@@ -206,6 +207,7 @@ export function EnvelopeGate({ guestName = "Tamu" }: { guestName?: string }) {
         <>
           <InvitationIntro />
           <VerseSection />
+          <GroomBrideSection />
         </>
       )}
     </div>
