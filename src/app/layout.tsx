@@ -21,11 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${cormorant.variable} h-full antialiased`}>
-      <body className="min-h-full bg-cream text-ink">
-        <div className="mx-auto flex min-h-screen w-full max-w-120 flex-col">
-          {children}
-        </div>
-      </body>
+      <body className="min-h-full bg-cream text-ink">{children}</body>
     </html>
   );
 }
