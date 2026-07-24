@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
+import { ButtonLink } from "./ui/ButtonLink";
 
 const fadeUp = (reduced: boolean) => ({
   initial: { opacity: 0, y: reduced ? 0 : 12 },
@@ -74,21 +75,13 @@ function PersonCard({ person, delay }: { person: Person; delay: number }) {
         <h3 className="font-bold text-2xl italic">{person.name}</h3>
         <p className="text-center text-sm">{person.bio}</p>
       </div>
-      <a
+      <ButtonLink
         href={person.instagramUrl}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="mt-auto flex justify-center items-center gap-2 rounded-sm min-w-36 bg-[#333C4B] px-4 py-1 text-sm text-white"
+        icon={{ src: "/icon_instagram.svg", alt: "Instagram icon" }}
+        className="mt-auto min-w-36"
       >
-        <Image
-          src="/icon_instagram.svg"
-          alt="Instagram icon"
-          width={16}
-          height={16}
-          className="object-cover select-none"
-        />
         instagram
-      </a>
+      </ButtonLink>
     </motion.div>
   );
 }

@@ -6,6 +6,8 @@ import { useScrollLock } from "../_hooks/useScrollLock";
 import { InvitationIntro } from "./InvitationIntro";
 import { VerseSection } from "./VerseSection";
 import { GroomBrideSection } from "./GroomBrideSection";
+import { EventDetailsSection } from "./EventDetailsSection";
+import type { GuestType } from "@/lib/guests";
 import Image from "next/image";
 
 type Phase = "sealed" | "opening" | "expanding" | "slate" | "names";
@@ -31,7 +33,13 @@ const NEXT: Record<Exclude<Phase, "sealed" | "names">, Phase> = {
   slate: "names",
 };
 
-export function EnvelopeGate({ guestName = "Tamu" }: { guestName?: string }) {
+export function EnvelopeGate({
+  guestName = "Tamu",
+  guestType = "resepsi",
+}: {
+  guestName?: string;
+  guestType?: GuestType;
+}) {
   const [phase, setPhase] = useState<Phase>("sealed");
   const reduced = useReducedMotion();
 
@@ -208,6 +216,7 @@ export function EnvelopeGate({ guestName = "Tamu" }: { guestName?: string }) {
           <InvitationIntro />
           <VerseSection />
           <GroomBrideSection />
+          <EventDetailsSection guestType={guestType} />
         </>
       )}
     </div>

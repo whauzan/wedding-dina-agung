@@ -6,6 +6,7 @@
   --color-ink: #2b2b2b;
   --color-seal: #8b2e2e;
   --color-ash: #C0C0C0;
+  --color-text-primary: #333C4B;
 }
 
 @theme inline {
@@ -14,7 +15,9 @@
   --color-ink: var(--color-ink);
   --color-seal: var(--color-seal);
   --color-ash: var(--color-ash);
+  --color-text-primary: var(--color-text-primary);
   --font-serif: var(--font-cormorant);
+  --font-prata: var(--font-prata);
 }
 
 body {
