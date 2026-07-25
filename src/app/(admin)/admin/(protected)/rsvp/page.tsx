@@ -6,6 +6,13 @@ const ATTENDANCE_LABEL: Record<string, string> = {
   ragu: "Ragu-ragu",
 };
 
+// Attendance → pill variant so status reads at a glance in the table.
+const ATTENDANCE_PILL: Record<string, string> = {
+  hadir: "admin-pill admin-pill--ok",
+  tidak_hadir: "admin-pill admin-pill--danger",
+  ragu: "admin-pill admin-pill--warn",
+};
+
 // Guest invitation type → label shown in the "Acara" column. The RSVP form
 // doesn't ask which event a guest will attend, so this reflects what they were
 // invited to (resolved from the guests table via guest_slug).
@@ -19,49 +26,66 @@ export default async function AdminRsvpPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-ink">RSVP</h1>
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <p className="admin-eyebrow">Konfirmasi kehadiran</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-(--admin-ink)">
+            RSVP
+          </h1>
+          <p className="mt-1 text-sm text-(--admin-muted)">
+            {rsvps.length} respons
+          </p>
+        </div>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- file download, not page navigation */}
-        <a
-          href="/api/export"
-          className="rounded bg-ink px-4 py-2 text-sm text-white"
-        >
+        <a href="/api/export" className="admin-btn admin-btn--accent">
           Export ke Excel
         </a>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-max border-collapse text-left text-sm">
+      <div className="admin-card overflow-x-auto">
+        <table className="admin-table min-w-max">
           <thead>
-            <tr className="border-b border-ink/10 text-ink/60">
-              <th className="py-2 pr-4">Nama</th>
-              <th className="py-2 pr-4">Kehadiran</th>
-              <th className="py-2 pr-4">Jumlah</th>
-              <th className="py-2 pr-4">Acara</th>
-              <th className="py-2 pr-4">Waktu</th>
+            <tr>
+              <th>Nama</th>
+              <th>Kehadiran</th>
+              <th>Jumlah</th>
+              <th>Acara</th>
+              <th>Waktu</th>
             </tr>
           </thead>
           <tbody>
             {rsvps.map((rsvp) => (
-              <tr key={rsvp.id} className="border-b border-ink/5">
-                <td className="py-2 pr-4">{rsvp.guest_name}</td>
-                <td className="py-2 pr-4">
-                  {rsvp.attendance ? ATTENDANCE_LABEL[rsvp.attendance] : "-"}
+              <tr key={rsvp.id}>
+                <td className="font-medium text-(--admin-ink)">
+                  {rsvp.guest_name}
                 </td>
-                <td className="py-2 pr-4">{rsvp.guest_count ?? "-"}</td>
-                <td className="py-2 pr-4">
-                  {rsvp.invited_type
-                    ? INVITED_TYPE_LABEL[rsvp.invited_type]
-                    : "-"}
+                <td>
+                  {rsvp.attendance ? (
+                    <span className={ATTENDANCE_PILL[rsvp.attendance]}>
+                      {ATTENDANCE_LABEL[rsvp.attendance]}
+                    </span>
+                  ) : (
+                    <span className="text-(--admin-faint)">—</span>
+                  )}
                 </td>
-                <td className="py-2 pr-4 text-ink/50">
+                <td className="admin-num">{rsvp.guest_count ?? "-"}</td>
+                <td>
+                  {rsvp.invited_type ? (
+                    <span className="admin-pill">
+                      {INVITED_TYPE_LABEL[rsvp.invited_type]}
+                    </span>
+                  ) : (
+                    <span className="text-(--admin-faint)">—</span>
+                  )}
+                </td>
+                <td className="admin-num text-(--admin-muted)">
                   {new Date(rsvp.created_at).toLocaleString("id-ID")}
                 </td>
               </tr>
             ))}
             {rsvps.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-ink/50">
+                <td colSpan={5} className="text-center text-(--admin-muted)">
                   Belum ada RSVP.
                 </td>
               </tr>

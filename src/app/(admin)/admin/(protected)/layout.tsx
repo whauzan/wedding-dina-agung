@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { assertAdminPage } from "@/lib/auth";
+import { AdminNav } from "./_components/AdminNav";
 import { LogoutButton } from "./_components/LogoutButton";
 
 export default async function AdminProtectedLayout({
@@ -10,19 +10,20 @@ export default async function AdminProtectedLayout({
   await assertAdminPage();
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-4xl px-6 py-8">
-      <header className="mb-8 flex items-center justify-between border-b border-ink/10 pb-4">
-        <nav className="flex items-center gap-4">
-          <Link href="/admin" className="font-semibold text-ink">
-            Tamu
-          </Link>
-          <Link href="/admin/rsvp" className="text-sm text-ink/70 hover:text-ink">
-            RSVP
-          </Link>
-        </nav>
-        <LogoutButton />
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-10 border-b border-(--admin-border) bg-(--admin-surface-blur) backdrop-blur">
+        <div className="mx-auto flex w-full max-w-240 items-center justify-between gap-4 px-5 py-3">
+          <div className="flex items-center gap-5">
+            <span className="text-sm font-semibold tracking-tight text-(--admin-ink)">
+              Undangan Admin
+            </span>
+            <AdminNav />
+          </div>
+          <LogoutButton />
+        </div>
       </header>
-      {children}
+
+      <main className="mx-auto w-full max-w-[60rem] px-5 py-8">{children}</main>
     </div>
   );
 }

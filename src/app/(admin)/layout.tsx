@@ -6,5 +6,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="font-inter">{children}</div>;
+  return <div className="font-inter min-h-screen">{children}</div>;
 }

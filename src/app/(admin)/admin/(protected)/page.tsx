@@ -8,9 +8,20 @@ export default async function AdminGuestsPage() {
     getWaTemplate(),
   ]);
 
+  const withoutPhone = guests.filter((g) => !g.phone).length;
+
   return (
     <div>
-      <h1 className="mb-6 text-xl font-semibold text-ink">Daftar Tamu</h1>
+      <div className="mb-6">
+        <p className="admin-eyebrow">Kelola undangan</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-(--admin-ink)">
+          Daftar Tamu
+        </h1>
+        <p className="mt-1 text-sm text-(--admin-muted)">
+          {guests.length} tamu
+          {withoutPhone > 0 && ` · ${withoutPhone} belum ada WhatsApp`}
+        </p>
+      </div>
       <GuestManager guests={guests} waTemplate={waTemplate} />
     </div>
   );

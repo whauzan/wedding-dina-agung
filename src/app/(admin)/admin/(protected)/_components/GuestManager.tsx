@@ -76,69 +76,73 @@ export function GuestManager({
   }
 
   return (
-    <div>
-      <form onSubmit={handleAdd} className="mb-8 flex flex-wrap items-end gap-3">
-        <div>
-          <label className="mb-1 block text-sm text-ink/70" htmlFor="guest-name">
-            Nama Tamu
-          </label>
-          <input
-            id="guest-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="rounded border border-ink/20 px-3 py-2 text-ink outline-none focus:border-ink/50"
-            required
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm text-ink/70" htmlFor="guest-phone">
-            No. WhatsApp
-          </label>
-          <input
-            id="guest-phone"
-            type="tel"
-            inputMode="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="0812… (opsional)"
-            className="rounded border border-ink/20 px-3 py-2 text-ink outline-none focus:border-ink/50"
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm text-ink/70" htmlFor="guest-type">
-            Tipe Undangan
-          </label>
-          <select
-            id="guest-type"
-            value={type}
-            onChange={(e) => setType(e.target.value as GuestType)}
-            className="rounded border border-ink/20 px-3 py-2 text-ink outline-none focus:border-ink/50"
+    <div className="flex flex-col gap-6">
+      <form onSubmit={handleAdd} className="admin-card p-5">
+        <p className="admin-eyebrow mb-4">Tambah tamu</p>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="min-w-40 flex-1">
+            <label className="admin-label" htmlFor="guest-name">
+              Nama tamu
+            </label>
+            <input
+              id="guest-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="admin-input"
+              required
+            />
+          </div>
+          <div className="min-w-40 flex-1">
+            <label className="admin-label" htmlFor="guest-phone">
+              No. WhatsApp{" "}
+              <span className="font-normal text-(--admin-faint)">(opsional)</span>
+            </label>
+            <input
+              id="guest-phone"
+              type="tel"
+              inputMode="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="0812…"
+              className="admin-input"
+            />
+          </div>
+          <div className="min-w-40 flex-1">
+            <label className="admin-label" htmlFor="guest-type">
+              Tipe undangan
+            </label>
+            <select
+              id="guest-type"
+              value={type}
+              onChange={(e) => setType(e.target.value as GuestType)}
+              className="admin-input"
+            >
+              <option value="resepsi">Resepsi</option>
+              <option value="akad_resepsi">Akad &amp; Resepsi</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            disabled={submitting || !name.trim()}
+            className="admin-btn admin-btn--accent"
           >
-            <option value="resepsi">Resepsi</option>
-            <option value="akad_resepsi">Akad &amp; Resepsi</option>
-          </select>
+            {submitting ? "Menambahkan..." : "Tambah tamu"}
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={submitting || !name.trim()}
-          className="rounded bg-ink px-4 py-2 text-white disabled:opacity-50"
-        >
-          {submitting ? "Menambahkan..." : "Tambah Tamu"}
-        </button>
+        {error && <p className="mt-3 text-sm text-(--admin-accent)">{error}</p>}
       </form>
-      {error && <p className="mb-4 text-sm text-seal">{error}</p>}
 
       <WaTemplateEditor template={template} onSaved={setTemplate} />
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-max border-collapse text-left text-sm">
+      <div className="admin-card overflow-x-auto">
+        <table className="admin-table min-w-max">
           <thead>
-            <tr className="border-b border-ink/10 text-ink/60">
-              <th className="py-2 pr-4">Nama</th>
-              <th className="py-2 pr-4">Tipe</th>
-              <th className="py-2 pr-4">Slug</th>
-              <th className="py-2 pr-4">WhatsApp</th>
-              <th className="py-2 pr-4">Aksi</th>
+            <tr>
+              <th>Nama</th>
+              <th>Tipe</th>
+              <th>Slug</th>
+              <th>WhatsApp</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -161,7 +165,7 @@ export function GuestManager({
             ))}
             {guests.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-ink/50">
+                <td colSpan={5} className="text-center text-(--admin-muted)">
                   Belum ada tamu.
                 </td>
               </tr>
@@ -212,46 +216,46 @@ function GuestRow({
 
   if (isEditing) {
     return (
-      <tr className="border-b border-ink/5">
-        <td className="py-2 pr-4">
+      <tr>
+        <td>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded border border-ink/20 px-2 py-1"
+            className="admin-input w-36"
           />
         </td>
-        <td className="py-2 pr-4">
+        <td>
           <select
             value={type}
             onChange={(e) => setType(e.target.value as GuestType)}
-            className="rounded border border-ink/20 px-2 py-1"
+            className="admin-input w-40"
           >
             <option value="resepsi">Resepsi</option>
             <option value="akad_resepsi">Akad &amp; Resepsi</option>
           </select>
         </td>
-        <td className="py-2 pr-4 text-ink/50">{guest.slug}</td>
-        <td className="py-2 pr-4">
+        <td className="text-(--admin-faint)">{guest.slug}</td>
+        <td>
           <input
             type="tel"
             inputMode="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="0812…"
-            className="w-32 rounded border border-ink/20 px-2 py-1"
+            className="admin-input w-32"
           />
         </td>
-        <td className="py-2 pr-4">
-          <div className="flex gap-3">
+        <td>
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={handleSave}
               disabled={saving || !name.trim()}
-              className="text-ink underline disabled:opacity-50"
+              className="admin-action"
             >
-              Simpan
+              {saving ? "Menyimpan..." : "Simpan"}
             </button>
-            <button type="button" onClick={onCancelEdit} className="text-ink/50 underline">
+            <button type="button" onClick={onCancelEdit} className="admin-action">
               Batal
             </button>
           </div>
@@ -261,32 +265,34 @@ function GuestRow({
   }
 
   return (
-    <tr className="border-b border-ink/5">
-      <td className="py-2 pr-4">{guest.name}</td>
-      <td className="py-2 pr-4">{TYPE_LABEL[guest.type]}</td>
-      <td className="py-2 pr-4 text-ink/50">{guest.slug}</td>
-      <td className="py-2 pr-4">
+    <tr>
+      <td className="font-medium text-(--admin-ink)">{guest.name}</td>
+      <td>
+        <span className="admin-pill">{TYPE_LABEL[guest.type]}</span>
+      </td>
+      <td className="text-(--admin-faint)">{guest.slug}</td>
+      <td>
         {guest.phone ? (
-          <button
-            type="button"
-            onClick={onSendWa}
-            className="text-[#128C7E] underline"
-          >
+          <button type="button" onClick={onSendWa} className="admin-action admin-action--wa">
             Kirim WA
           </button>
         ) : (
-          <span className="text-ink/30">—</span>
+          <span className="text-(--admin-faint)">Belum ada</span>
         )}
       </td>
-      <td className="py-2 pr-4">
-        <div className="flex gap-3">
-          <button type="button" onClick={onCopyLink} className="text-ink underline">
-            {copied ? "Tersalin!" : "Salin Link"}
+      <td>
+        <div className="flex gap-4">
+          <button type="button" onClick={onCopyLink} className="admin-action">
+            {copied ? "Tersalin!" : "Salin link"}
           </button>
-          <button type="button" onClick={onStartEdit} className="text-ink underline">
+          <button type="button" onClick={onStartEdit} className="admin-action">
             Edit
           </button>
-          <button type="button" onClick={onDelete} className="text-seal underline">
+          <button
+            type="button"
+            onClick={onDelete}
+            className="admin-action admin-action--danger"
+          >
             Hapus
           </button>
         </div>
@@ -338,25 +344,38 @@ function WaTemplateEditor({
   }
 
   return (
-    <div className="mb-8 rounded border border-ink/10">
+    <div className="admin-card">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-ink"
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left"
       >
-        <span>Edit pesan WhatsApp</span>
-        <span className="text-ink/50">{open ? "Tutup" : "Buka"}</span>
+        <span className="text-sm font-medium text-(--admin-ink)">
+          Edit pesan WhatsApp
+        </span>
+        <span
+          aria-hidden
+          className={`text-(--admin-muted) transition-transform ${open ? "rotate-180" : ""}`}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (
-        <div className="border-t border-ink/10 px-4 py-4">
-          <p className="mb-2 text-xs text-ink/60">
+        <div className="flex flex-col gap-4 border-t border-(--admin-border) px-5 py-5">
+          <p className="text-xs text-(--admin-muted)">
             Gunakan{" "}
-            <code className="rounded bg-ink/5 px-1">{"{Nama}"}</code> untuk nama
-            tamu dan{" "}
-            <code className="rounded bg-ink/5 px-1">{"{link}"}</code> untuk link
-            undangan.
+            <code className="rounded bg-(--admin-surface-2) px-1 py-0.5 font-mono">
+              {"{Nama}"}
+            </code>{" "}
+            untuk nama tamu dan{" "}
+            <code className="rounded bg-(--admin-surface-2) px-1 py-0.5 font-mono">
+              {"{link}"}
+            </code>{" "}
+            untuk link undangan.
           </p>
+
           <textarea
             value={draft}
             onChange={(e) => {
@@ -364,28 +383,30 @@ function WaTemplateEditor({
               setStatus("idle");
             }}
             rows={10}
-            className="w-full rounded border border-ink/20 px-3 py-2 text-sm text-ink outline-none focus:border-ink/50"
+            className="admin-input resize-y font-mono leading-relaxed"
           />
 
-          <p className="mt-3 mb-1 text-xs font-medium text-ink/60">Pratinjau</p>
-          <pre className="mb-3 whitespace-pre-wrap rounded bg-ink/5 px-3 py-2 text-sm text-ink">
-            {renderWaMessage(draft, PREVIEW_NAME, PREVIEW_LINK)}
-          </pre>
+          <div>
+            <p className="admin-eyebrow mb-1.5">Pratinjau</p>
+            <pre className="overflow-x-auto rounded-lg border border-(--admin-border) bg-(--admin-surface-2) px-3 py-2.5 text-sm whitespace-pre-wrap text-(--admin-ink)">
+              {renderWaMessage(draft, PREVIEW_NAME, PREVIEW_LINK)}
+            </pre>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={handleSave}
               disabled={saving || !draft.trim()}
-              className="rounded bg-ink px-4 py-2 text-sm text-white disabled:opacity-50"
+              className="admin-btn admin-btn--accent"
             >
-              {saving ? "Menyimpan..." : "Simpan Pesan"}
+              {saving ? "Menyimpan..." : "Simpan pesan"}
             </button>
             {status === "saved" && (
-              <span className="text-sm text-[#128C7E]">Tersimpan.</span>
+              <span className="text-sm text-(--admin-ok)">Tersimpan.</span>
             )}
             {status === "error" && (
-              <span className="text-sm text-seal">Gagal menyimpan.</span>
+              <span className="text-sm text-(--admin-accent)">Gagal menyimpan.</span>
             )}
           </div>
         </div>

@@ -58,3 +58,232 @@ body {
 .invite-texture--fixed {
   position: fixed;
 }
+
+/* ---------------------------------------------------------------------------
+   Admin dashboard design system.
+
+   A polished-utilitarian, light-only back-office theme. Everything lives under
+   .font-inter (the class the (admin) layout puts on its wrapper) so none of it
+   leaks into the guest-facing invitation, which keeps its Cormorant/slate look.
+   Reuses the invitation's warm neutrals + seal red so the two feel like one
+   product without the admin cosplaying the romantic invite.
+
+   Prefer these small utility classes over long Tailwind chains repeated across
+   pages, to keep the cascade legible.
+--------------------------------------------------------------------------- */
+.font-inter {
+  /* Warm, cream-biased neutrals — chosen, not defaulted. */
+  --admin-bg: #f1efe9;
+  --admin-surface: #fbfaf7;
+  /* Translucent variant for the sticky header (opacity modifiers on a bare
+     var() are unreliable in Tailwind v4, so bake the alpha into a token). */
+  --admin-surface-blur: rgba(251, 250, 247, 0.85);
+  --admin-surface-2: #f4f2ec;
+  --admin-border: #e4e0d7;
+  --admin-ink: #2b2b2b;
+  --admin-muted: #6b6b63;
+  --admin-faint: #9a988e;
+
+  /* Single accent: seal red, echoing the wax seal on the envelope. */
+  --admin-accent: #8b2e2e;
+  --admin-accent-hover: #732626;
+  --admin-accent-ink: #fbfaf7;
+  --admin-accent-soft: #f0e2e0;
+
+  /* Semantic cues, kept distinct from the accent. */
+  --admin-ok: #2e7d57;
+  --admin-ok-soft: #e2ede7;
+  --admin-warn: #8a6d3b;
+  --admin-warn-soft: #efe8db;
+
+  background-color: var(--admin-bg);
+  color: var(--admin-ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100%;
+}
+
+/* Shared visible focus ring for keyboard users across the admin. */
+.font-inter :focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Surface card: the primary grouping device. */
+.admin-card {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+}
+
+/* Section eyebrow label (uppercase, tracked). */
+.admin-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--admin-muted);
+}
+
+/* Form field label. */
+.admin-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--admin-muted);
+}
+
+/* Text inputs, selects, textareas. */
+.admin-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--admin-ink);
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.admin-input::placeholder {
+  color: var(--admin-faint);
+}
+.admin-input:focus {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px var(--admin-accent-soft);
+}
+
+/* Buttons. Base + variants. */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.admin-btn--accent {
+  background-color: var(--admin-accent);
+  color: var(--admin-accent-ink);
+}
+.admin-btn--accent:not(:disabled):hover {
+  background-color: var(--admin-accent-hover);
+}
+.admin-btn--ghost {
+  background-color: transparent;
+  border-color: var(--admin-border);
+  color: var(--admin-ink);
+}
+.admin-btn--ghost:not(:disabled):hover {
+  background-color: var(--admin-surface-2);
+}
+
+/* Compact text action used inside table rows. */
+.admin-action {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--admin-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.admin-action:not(:disabled):hover {
+  color: var(--admin-ink);
+}
+.admin-action--danger {
+  color: var(--admin-accent);
+}
+.admin-action--danger:not(:disabled):hover {
+  color: var(--admin-accent-hover);
+}
+.admin-action--wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--admin-ok);
+}
+.admin-action--wa:hover {
+  color: #256848;
+}
+.admin-action--wa::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--admin-ok);
+}
+
+/* Tables. */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+.admin-table thead th {
+  padding: 0.625rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--admin-muted);
+  border-bottom: 1px solid var(--admin-border);
+  white-space: nowrap;
+}
+.admin-table tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--admin-border);
+  vertical-align: middle;
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tbody tr:hover td {
+  background-color: var(--admin-surface-2);
+}
+.admin-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* State pills. */
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background-color: var(--admin-surface-2);
+  color: var(--admin-muted);
+  border: 1px solid var(--admin-border);
+}
+.admin-pill--ok {
+  background-color: var(--admin-ok-soft);
+  color: var(--admin-ok);
+  border-color: transparent;
+}
+.admin-pill--warn {
+  background-color: var(--admin-warn-soft);
+  color: var(--admin-warn);
+  border-color: transparent;
+}
+.admin-pill--danger {
+  background-color: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  border-color: transparent;
+}
