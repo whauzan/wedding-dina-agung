@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Guest, GuestType } from "@/lib/guests";
 import { renderWaMessage } from "@/lib/wa";
+import Image from "next/image";
 
 const TYPE_LABEL: Record<GuestType, string> = {
   akad_resepsi: "Akad & Resepsi",
@@ -72,7 +73,10 @@ export function GuestManager({
     const url = `${window.location.origin}/${slug}`;
     await navigator.clipboard.writeText(url);
     setCopiedId(id);
-    setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 1500);
+    setTimeout(
+      () => setCopiedId((current) => (current === id ? null : current)),
+      1500,
+    );
   }
 
   return (
@@ -95,7 +99,9 @@ export function GuestManager({
           <div className="min-w-40 flex-1">
             <label className="admin-label" htmlFor="guest-phone">
               No. WhatsApp{" "}
-              <span className="font-normal text-(--admin-faint)">(opsional)</span>
+              <span className="font-normal text-(--admin-faint)">
+                (opsional)
+              </span>
             </label>
             <input
               id="guest-phone"
@@ -255,7 +261,11 @@ function GuestRow({
             >
               {saving ? "Menyimpan..." : "Simpan"}
             </button>
-            <button type="button" onClick={onCancelEdit} className="admin-action">
+            <button
+              type="button"
+              onClick={onCancelEdit}
+              className="admin-action"
+            >
               Batal
             </button>
           </div>
@@ -273,7 +283,17 @@ function GuestRow({
       <td className="text-(--admin-faint)">{guest.slug}</td>
       <td>
         {guest.phone ? (
-          <button type="button" onClick={onSendWa} className="admin-action admin-action--wa">
+          <button
+            type="button"
+            onClick={onSendWa}
+            className="admin-action admin-action--wa"
+          >
+            <Image
+              src="/icon_whatsapp.svg"
+              alt="Icon whatsapp"
+              width={16}
+              height={16}
+            />
             Kirim WA
           </button>
         ) : (
@@ -406,7 +426,9 @@ function WaTemplateEditor({
               <span className="text-sm text-(--admin-ok)">Tersimpan.</span>
             )}
             {status === "error" && (
-              <span className="text-sm text-(--admin-accent)">Gagal menyimpan.</span>
+              <span className="text-sm text-(--admin-accent)">
+                Gagal menyimpan.
+              </span>
             )}
           </div>
         </div>

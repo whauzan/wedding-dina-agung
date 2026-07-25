@@ -210,21 +210,24 @@ body {
 .admin-action--danger:not(:disabled):hover {
   color: var(--admin-accent-hover);
 }
+/* Kirim WA: the primary per-row send action. Styled as a small pill button
+   (not a status dot) so it reads as tappable and stands apart from the plain
+   text actions. Carries the full-color WhatsApp logo, so the pill itself stays
+   neutral — a hairline + soft surface — and lets the mark provide the color. */
 .admin-action--wa {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--admin-ok);
-}
-.admin-action--wa:hover {
-  color: #256848;
-}
-.admin-action--wa::before {
-  content: "";
-  width: 0.5rem;
-  height: 0.5rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 9999px;
-  background-color: var(--admin-ok);
+  border: 1px solid var(--admin-border);
+  background-color: var(--admin-surface);
+  color: var(--admin-ink);
+}
+.admin-action--wa:not(:disabled):hover {
+  border-color: var(--admin-ok);
+  background-color: var(--admin-ok-soft);
+  color: var(--admin-ink);
 }
 
 /* Tables. */

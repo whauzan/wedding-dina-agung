@@ -23,7 +23,7 @@ export default async function AdminProtectedLayout({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[60rem] px-5 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-240 px-5 py-8">{children}</main>
     </div>
   );
 }
