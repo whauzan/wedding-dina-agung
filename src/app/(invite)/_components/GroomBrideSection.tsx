@@ -15,6 +15,7 @@ type Person = {
   name: string;
   bio: string;
   instagramUrl: string;
+  username: string;
   /** Extra object-cover zoom for photos framed wider than the others (default 1). */
   zoom?: number;
   /** object-position vertical bias, e.g. "20%" to favor the face/chest (default "50%"). */
@@ -28,6 +29,7 @@ const groom: Person = {
   name: "Agung Nugroho",
   bio: "Putra pertama Bapak Radino dan Ibu Turminah",
   instagramUrl: "https://www.instagram.com/gaungnugroho",
+  username: "@gaungnugroho",
   zoom: 2.6,
   focusY: "25%",
   flip: true,
@@ -38,6 +40,7 @@ const bride: Person = {
   name: "Yudia Putri M.",
   bio: "Putri ketiga Bapak Yudianto (Alm.) dan Ibu Halimatus Sakdiyah",
   instagramUrl: "https://www.instagram.com/yudiapm",
+  username: "@yudiapm",
   zoom: 1.3,
   focusY: "80%",
   flip: true,
@@ -80,7 +83,7 @@ function PersonCard({ person, delay }: { person: Person; delay: number }) {
         icon={{ src: "/icon_instagram.svg", alt: "Instagram icon" }}
         className="mt-auto min-w-36"
       >
-        instagram
+        {person.username}
       </ButtonLink>
     </motion.div>
   );
