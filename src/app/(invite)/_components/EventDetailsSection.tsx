@@ -17,10 +17,12 @@ function EventBlock({
   event,
   delay,
   paired,
+  showVenue = true,
 }: {
   event: EventDetails;
   delay: number;
   paired: boolean;
+  showVenue?: boolean;
 }) {
   const reduced = useReducedMotion();
   const fade = fadeUp(!!reduced);
@@ -31,12 +33,11 @@ function EventBlock({
       transition={{ duration: 0.6, delay }}
       className="flex flex-col items-center gap-4 text-center"
     >
-      <p className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold">~ {event.label} ~</p>
+      <p className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold">
+        ~ {event.label} ~
+      </p>
       <div
-        className={cn(
-          "flex items-center gap-4",
-          !paired && "flex-col gap-1",
-        )}
+        className={cn("flex items-center gap-4", !paired && "flex-col gap-1")}
       >
         <p className="font-semibold">
           <span
@@ -63,15 +64,44 @@ function EventBlock({
           </p>
         </div>
       </div>
+      {showVenue && <VenueBlock event={event} />}
+    </motion.div>
+  );
+}
+
+/**
+ * Venue name + address + maps button. Standalone so it can be rendered once,
+ * shared beneath both event blocks for akad_resepsi guests (same venue, two
+ * times), or inline inside a single EventBlock for resepsi-only guests.
+ */
+function VenueBlock({ event, delay }: { event: EventDetails; delay?: number }) {
+  const reduced = useReducedMotion();
+  const fade = fadeUp(!!reduced);
+
+  const content = (
+    <>
       <div className="flex flex-col">
-        <p className="text-xl font-bold">Nama Tempat</p>
         <p className="max-w-xs text-base font-medium">
-          {event.venueName}
+          <span className="font-bold">{event.venueName}</span>
           <br />
           {event.address}
         </p>
       </div>
       <ButtonLink href={event.mapsUrl}>Lihat Peta</ButtonLink>
+    </>
+  );
+
+  // When rendered standalone (shared footer) it animates on its own; inline
+  // inside an EventBlock the parent already handles the reveal.
+  if (delay === undefined) return content;
+
+  return (
+    <motion.div
+      {...fade}
+      transition={{ duration: 0.6, delay }}
+      className="flex flex-col items-center gap-4 text-center"
+    >
+      {content}
     </motion.div>
   );
 }
@@ -130,14 +160,27 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
           />
         </motion.div>
 
-        {isAkadResepsi && (
-          <EventBlock event={wedding.akad} delay={0.2} paired={isAkadResepsi} />
+        {isAkadResepsi ? (
+          <>
+            {/* Same venue, two times: render both time rows, then one shared
+                venue footer below (client wants the venue shown only once). */}
+            <EventBlock
+              event={wedding.akad}
+              delay={0.2}
+              paired
+              showVenue={false}
+            />
+            <EventBlock
+              event={wedding.resepsi}
+              delay={0.35}
+              paired
+              showVenue={false}
+            />
+            <VenueBlock event={wedding.resepsi} delay={0.5} />
+          </>
+        ) : (
+          <EventBlock event={wedding.resepsi} delay={0.2} paired={false} />
         )}
-        <EventBlock
-          event={wedding.resepsi}
-          delay={isAkadResepsi ? 0.35 : 0.2}
-          paired={isAkadResepsi}
-        />
       </div>
     </section>
   );
