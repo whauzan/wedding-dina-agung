@@ -6,6 +6,7 @@ import { useScrollLock } from "../_hooks/useScrollLock";
 import { InvitationIntro } from "./InvitationIntro";
 import { VerseSection } from "./VerseSection";
 import { GroomBrideSection } from "./GroomBrideSection";
+import { OurStorySection } from "./OurStorySection";
 import { EventDetailsSection } from "./EventDetailsSection";
 import type { GuestType } from "@/lib/guests";
 import Image from "next/image";
@@ -217,6 +218,7 @@ export function EnvelopeGate({
           <VerseSection />
           <GroomBrideSection />
           <EventDetailsSection guestType={guestType} />
+          <OurStorySection />
         </>
       )}
     </div>
