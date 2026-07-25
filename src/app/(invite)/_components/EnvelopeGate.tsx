@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useScrollLock } from "../_hooks/useScrollLock";
+import { MusicPlayer, type MusicPlayerHandle } from "./MusicPlayer";
 import { InvitationIntro } from "./InvitationIntro";
 import { VerseSection } from "./VerseSection";
 import { GroomBrideSection } from "./GroomBrideSection";
@@ -48,6 +49,7 @@ export function EnvelopeGate({
 }) {
   const [phase, setPhase] = useState<Phase>("sealed");
   const reduced = useReducedMotion();
+  const musicRef = useRef<MusicPlayerHandle>(null);
 
   useScrollLock(phase !== "names");
 
@@ -61,6 +63,9 @@ export function EnvelopeGate({
 
   const handleOpen = () => {
     if (phase !== "sealed") return;
+    // Start the song from within the tap gesture so the browser doesn't block
+    // it as autoplay. Kept inside the guard so re-taps don't restart it.
+    musicRef.current?.play();
     setPhase("opening");
   };
 
@@ -68,6 +73,10 @@ export function EnvelopeGate({
 
   return (
     <div className="relative flex min-h-screen w-full flex-1 flex-col overflow-hidden">
+      {/* Background music. Mounted once for the whole experience so playback,
+          started on the envelope tap, survives every phase transition. */}
+      <MusicPlayer ref={musicRef} />
+
       {/* Background layer: cream -> slate. Color is driven by inline style
           (the theme CSS vars) with a CSS transition — a plain `bg-slate`
           utility here was being overridden and never painted. The texture
