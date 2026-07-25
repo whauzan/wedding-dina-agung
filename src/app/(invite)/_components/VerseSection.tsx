@@ -61,7 +61,7 @@ export function VerseSection() {
           alt=""
           width={1908}
           height={3234}
-          className="w-40 select-none"
+          className="w-[clamp(8rem,32vw,10rem)] select-none"
         />
       </motion.div>
     </section>

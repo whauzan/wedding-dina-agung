@@ -88,7 +88,7 @@ export function WishesWall({
         <motion.h2
           {...fade}
           transition={{ duration: 0.6 }}
-          className="text-[2rem] font-bold italic"
+          className="text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
         >
           {copy.title}
         </motion.h2>

@@ -72,7 +72,7 @@ function PersonCard({ person, delay }: { person: Person; delay: number }) {
         />
       </div>
       <div className="flex flex-1 flex-col items-center gap-2">
-        <h3 className="font-bold text-2xl italic">{person.name}</h3>
+        <h3 className="font-bold text-[clamp(1.25rem,6vw,1.5rem)] italic">{person.name}</h3>
         <p className="text-center text-sm">{person.bio}</p>
       </div>
       <ButtonLink
@@ -97,28 +97,28 @@ export function GroomBrideSection() {
         alt=""
         width={192}
         height={211}
-        className="absolute top-0 left-0 w-48 select-none transform scale-x-[-1]"
+        className="absolute top-0 left-0 w-[clamp(9rem,38vw,12rem)] select-none transform scale-x-[-1]"
       />
       <Image
         src="/ornament-corner.svg"
         alt=""
         width={192}
         height={211}
-        className="absolute top-0 right-0 w-48 select-none"
+        className="absolute top-0 right-0 w-[clamp(9rem,38vw,12rem)] select-none"
       />
       <Image
         src="/ornament-corner.svg"
         alt=""
         width={192}
         height={211}
-        className="absolute bottom-0 left-0 w-48 transform scale-y-[-1] scale-x-[-1] select-none"
+        className="absolute bottom-0 left-0 w-[clamp(9rem,38vw,12rem)] transform scale-y-[-1] scale-x-[-1] select-none"
       />
       <Image
         src="/ornament-corner.svg"
         alt=""
         width={192}
         height={211}
-        className="absolute right-0 bottom-0 w-48 transform scale-y-[-1] select-none"
+        className="absolute right-0 bottom-0 w-[clamp(9rem,38vw,12rem)] transform scale-y-[-1] select-none"
       />
 
       <motion.div {...fade} transition={{ duration: 0.6 }} className="text-3xl">
@@ -128,7 +128,7 @@ export function GroomBrideSection() {
       <motion.h2
         {...fade}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-[2rem] italic font-bold"
+        className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold"
       >
         Groom &amp; Bride
       </motion.h2>

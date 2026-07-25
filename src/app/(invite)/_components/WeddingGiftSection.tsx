@@ -54,16 +54,16 @@ function BankCard({ bank, delay }: { bank: BankAccount; delay: number }) {
       transition={{ duration: 0.6, delay }}
       className="flex w-full max-w-xs items-center gap-2.5"
     >
-      <div className="relative w-28 shrink-0 h-16 flex items-center">
+      <div className="relative h-16 w-28 shrink-0 overflow-hidden">
         <Image
           src={bank.logo}
           alt={bank.name}
-          width={137}
-          height={58}
+          fill
+          sizes="112px"
           className="object-contain object-left select-none"
         />
       </div>
-      <div className="flex min-w-52 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="text-xs font-medium">Atas Nama</span>
         <div className="flex flex-col">
           <span className="text-base font-medium">{bank.holder}</span>
@@ -118,7 +118,7 @@ export function WeddingGiftSection() {
       <motion.h2
         {...fade}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-center text-[2rem] font-bold italic"
+        className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Wedding Gift
       </motion.h2>
@@ -173,7 +173,7 @@ export function WeddingGiftSection() {
             <motion.p
               {...fade}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-2xl font-bold italic"
+              className="text-[clamp(1.25rem,6vw,1.5rem)] font-bold italic"
             >
               ~ Cashless ~
             </motion.p>
@@ -189,7 +189,7 @@ export function WeddingGiftSection() {
             <motion.p
               {...fade}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-2xl font-bold italic"
+              className="text-[clamp(1.25rem,6vw,1.5rem)] font-bold italic"
             >
               ~ Kirim Kado ~
             </motion.p>

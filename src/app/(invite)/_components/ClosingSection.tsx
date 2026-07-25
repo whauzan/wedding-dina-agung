@@ -20,7 +20,7 @@ export function ClosingSection() {
         <motion.h2
           {...fade}
           transition={{ duration: 0.6 }}
-          className="text-[2rem] leading-none font-bold italic"
+          className="text-[clamp(1.75rem,8vw,2rem)] leading-none font-bold italic"
         >
           {closing.title}
         </motion.h2>
@@ -44,7 +44,7 @@ export function ClosingSection() {
         <motion.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-2xl font-prata"
+          className="text-[clamp(1.25rem,6vw,1.5rem)] font-prata"
         >
           {closing.names}
         </motion.p>

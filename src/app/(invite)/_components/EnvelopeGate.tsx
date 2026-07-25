@@ -117,7 +117,7 @@ export function EnvelopeGate({
                 transition={{ duration: reduced ? 0.15 : 0.3 }}
               >
                 <motion.p
-                  className="font-serif text-2xl text-ink"
+                  className="font-serif text-[clamp(1.25rem,6vw,1.5rem)] text-ink"
                   animate={{ opacity: phase === "sealed" ? 1 : 0 }}
                   transition={{ duration: reduced ? 0.15 : 0.25 }}
                 >
@@ -161,7 +161,7 @@ export function EnvelopeGate({
                     <motion.img
                       src="/seal.png"
                       alt="seal"
-                      className="absolute top-[55%] left-1/2 w-28 -translate-x-1/2 -translate-y-1/2 select-none"
+                      className="absolute top-[55%] left-1/2 w-[clamp(5.5rem,26vw,7rem)] -translate-x-1/2 -translate-y-1/2 select-none"
                       animate={
                         phase === "opening"
                           ? {
@@ -181,7 +181,7 @@ export function EnvelopeGate({
                 </motion.button>
 
                 <motion.p
-                  className="font-serif text-2xl tracking-wide text-ink/70 italic"
+                  className="font-serif text-[clamp(1.25rem,6vw,1.5rem)] tracking-wide text-ink/70 italic"
                   animate={{ opacity: phase === "sealed" ? 1 : 0 }}
                   transition={{ duration: reduced ? 0.15 : 0.25 }}
                 >
@@ -207,9 +207,9 @@ export function EnvelopeGate({
                   alt="floral"
                   width={384}
                   height={320}
-                  className="w-52 select-none"
+                  className="w-[clamp(11rem,42vw,13rem)] select-none"
                 />
-                <p className="font-serif text-2xl tracking-widest text-cream italic">
+                <p className="font-serif text-[clamp(1.25rem,6vw,1.5rem)] tracking-widest text-cream italic">
                   You are invited to
                 </p>
                 <Image
@@ -217,7 +217,7 @@ export function EnvelopeGate({
                   alt="floral"
                   width={384}
                   height={362}
-                  className="w-52 select-none"
+                  className="w-[clamp(11rem,42vw,13rem)] select-none"
                 />
               </motion.div>
             )}

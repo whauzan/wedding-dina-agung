@@ -156,14 +156,14 @@ export function OurStorySection() {
         width={384}
         height={320}
         aria-hidden
-        className="pointer-events-none absolute top-10 -left-9 w-52 -scale-x-100 select-none"
+        className="pointer-events-none absolute top-10 -left-9 w-[clamp(11rem,42vw,13rem)] -scale-x-100 select-none"
       />
 
       {/* --- Our Story --- */}
       <motion.h2
         {...fade}
         transition={{ duration: 0.6 }}
-        className="text-center text-[2rem] font-bold italic"
+        className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Our Story
       </motion.h2>
@@ -196,7 +196,7 @@ export function OurStorySection() {
       <motion.h2
         {...fade}
         transition={{ duration: 0.6 }}
-        className="text-center text-[2rem] font-bold italic"
+        className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Our Moments
       </motion.h2>
@@ -218,7 +218,7 @@ export function OurStorySection() {
         width={384}
         height={362}
         aria-hidden
-        className="pointer-events-none absolute -right-4 -bottom-20 w-52 select-none"
+        className="pointer-events-none absolute -right-4 -bottom-20 w-[clamp(11rem,42vw,13rem)] select-none"
       />
     </section>
   );

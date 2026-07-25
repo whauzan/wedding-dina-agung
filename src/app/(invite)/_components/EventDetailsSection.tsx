@@ -31,7 +31,7 @@ function EventBlock({
       transition={{ duration: 0.6, delay }}
       className="flex flex-col items-center gap-4 text-center"
     >
-      <p className="text-[2rem] italic font-bold">~ {event.label} ~</p>
+      <p className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold">~ {event.label} ~</p>
       <div
         className={cn(
           "flex items-center gap-4",
@@ -39,10 +39,20 @@ function EventBlock({
         )}
       >
         <p className="font-semibold">
-          <span className={cn("font-serif", paired ? "text-2xl" : "text-4xl")}>
+          <span
+            className={cn(
+              "font-serif",
+              paired ? "text-2xl" : "text-[clamp(1.875rem,9vw,2.25rem)]",
+            )}
+          >
             {event.day},
           </span>{" "}
-          <span className={cn("font-prata", paired ? "text-base" : "text-[2rem]")}>
+          <span
+            className={cn(
+              "font-prata",
+              paired ? "text-base" : "text-[clamp(1.75rem,8vw,2rem)]",
+            )}
+          >
             {event.date}
           </span>
         </p>
@@ -97,7 +107,7 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
         <motion.p
           {...fade}
           transition={{ duration: 0.6 }}
-          className="text-[2rem] italic font-bold"
+          className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold"
         >
           Save the Date!
         </motion.p>
@@ -105,7 +115,11 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
         <motion.div
           {...fade}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className={cn(isAkadResepsi ? "w-52" : "w-80")}
+          className={cn(
+            isAkadResepsi
+              ? "w-[clamp(11rem,42vw,13rem)]"
+              : "w-[clamp(15rem,62vw,20rem)]",
+          )}
         >
           <Image
             src="/floral-gate.svg"
