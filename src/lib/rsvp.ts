@@ -21,3 +21,24 @@ export async function listRsvps(): Promise<Rsvp[]> {
   if (error) throw error;
   return data as Rsvp[];
 }
+
+export type CreateRsvpInput = {
+  guest_slug: string | null;
+  guest_name: string;
+  attendance: NonNullable<Rsvp["attendance"]>;
+  guest_count: number;
+  // `event` is intentionally always null: we don't collect which event a guest
+  // will attend (form omits it, per the design decision).
+  message: string | null;
+};
+
+export async function createRsvp(input: CreateRsvpInput): Promise<Rsvp> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("rsvp")
+    .insert({ ...input, event: null })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as Rsvp;
+}

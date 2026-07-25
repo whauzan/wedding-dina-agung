@@ -9,5 +9,11 @@ export default async function GuestInvitePage({
   const { slug } = await params;
   const guest = (await getGuestBySlug(slug)) ?? FALLBACK_GUEST;
 
-  return <EnvelopeGate guestName={guest.name} guestType={guest.type} />;
+  return (
+    <EnvelopeGate
+      guestName={guest.name}
+      guestType={guest.type}
+      guestSlug={slug}
+    />
+  );
 }

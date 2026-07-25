@@ -9,6 +9,7 @@ import { GroomBrideSection } from "./GroomBrideSection";
 import { OurStorySection } from "./OurStorySection";
 import { EventDetailsSection } from "./EventDetailsSection";
 import { WeddingGiftSection } from "./WeddingGiftSection";
+import { RsvpWishesSection } from "./RsvpWishesSection";
 import type { GuestType } from "@/lib/guests";
 import Image from "next/image";
 
@@ -38,9 +39,11 @@ const NEXT: Record<Exclude<Phase, "sealed" | "names">, Phase> = {
 export function EnvelopeGate({
   guestName = "Tamu",
   guestType = "resepsi",
+  guestSlug = null,
 }: {
   guestName?: string;
   guestType?: GuestType;
+  guestSlug?: string | null;
 }) {
   const [phase, setPhase] = useState<Phase>("sealed");
   const reduced = useReducedMotion();
@@ -221,6 +224,7 @@ export function EnvelopeGate({
           <EventDetailsSection guestType={guestType} />
           <OurStorySection />
           <WeddingGiftSection />
+          <RsvpWishesSection guestName={guestName} guestSlug={guestSlug} />
         </>
       )}
     </div>

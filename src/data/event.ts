@@ -74,3 +74,46 @@ export const wedding = {
     } satisfies GiftAddress,
   },
 };
+
+/**
+ * Guest-facing copy for the RSVP + Wishes section, centralized here so the
+ * client can tweak wording without touching JSX (CLAUDE.md §9.6). All strings
+ * are Indonesian.
+ */
+export type Attendance = "hadir" | "tidak_hadir" | "ragu";
+
+export const rsvp = {
+  title: "RSVP",
+  subtitle: "Konfirmasi kehadiran anda dengan",
+  nameLabel: "Nama Anda",
+  namePlaceholder: "Tulis Nama Anda",
+  countLabel: "Jumlah Kehadiran",
+  attendanceLabel: "Konfirmasi Kehadiran",
+  selectPlaceholder: "Pilih",
+  submit: "Kirim",
+  submitting: "Mengirim...",
+  success: "Terima kasih, kehadiran Anda sudah kami terima.",
+  error: "Maaf, terjadi kesalahan. Coba lagi.",
+  // Jumlah Kehadiran — 1–2 orang.
+  countOptions: [
+    { value: 1, label: "1 Orang" },
+    { value: 2, label: "2 Orang" },
+  ],
+  attendanceOptions: [
+    { value: "hadir", label: "Hadir" },
+    { value: "tidak_hadir", label: "Tidak Hadir" },
+  ] satisfies { value: Attendance; label: string }[],
+};
+
+export const wishes = {
+  title: "Best Wishes",
+  subtitle: "Sampaikan doa dan ucapan terbaik anda",
+  nameLabel: "Nama Anda",
+  namePlaceholder: "Tulis Nama Anda",
+  messageLabel: "Tulis ucapan",
+  messagePlaceholder: "Tulis ucapan",
+  submit: "Kirim",
+  submitting: "Mengirim...",
+  error: "Maaf, terjadi kesalahan. Coba lagi.",
+  empty: "Jadilah yang pertama memberi ucapan.",
+};
