@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
+import { MOMENTS_BLUR } from "./momentsBlur";
 
 const fadeUp = (reduced: boolean) => ({
   initial: { opacity: 0, y: reduced ? 0 : 12 },
@@ -16,13 +17,10 @@ const STORY = {
 };
 
 const MOMENTS_QUOTE = '"A moment is better when shared with you."';
-const MOMENTS = [
-  "/moments1.png",
-  "/moments2.png",
-  "/our-story.png",
-  "/bride.jpg",
-  "/groom.jpg",
-];
+const MOMENTS = Array.from(
+  { length: 20 },
+  (_, i) => `/moments${i + 1}.jpg`,
+);
 
 // Hand-painted brush frame for the selected thumbnail — the "Rectangle 5" brush
 // stroke extracted from Figma (photo/pattern stripped) into a standalone SVG
@@ -84,6 +82,8 @@ function MomentsGallery() {
               alt={`Moment ${active + 1}`}
               fill
               sizes="(max-width: 480px) 90vw, 320px"
+              placeholder="blur"
+              blurDataURL={MOMENTS_BLUR[active]}
               className="object-cover select-none"
             />
           </motion.div>
@@ -123,6 +123,9 @@ function MomentsGallery() {
               alt=""
               fill
               sizes="112px"
+              quality={80}
+              placeholder="blur"
+              blurDataURL={MOMENTS_BLUR[i]}
               className="object-cover select-none"
             />
             {/* Painted brush frame (Figma "Rectangle 5") on the active thumb. */}
