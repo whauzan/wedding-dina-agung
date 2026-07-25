@@ -110,22 +110,6 @@ export function RsvpForm({
             />
           </Field>
 
-          <Field label={rsvp.countLabel} htmlFor="rsvp-count">
-            <Select
-              id="rsvp-count"
-              placeholder={rsvp.selectPlaceholder}
-              value={count}
-              onChange={(e) => setCount(e.target.value)}
-              required
-            >
-              {rsvp.countOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </Select>
-          </Field>
-
           <Field label={rsvp.attendanceLabel} htmlFor="rsvp-attendance">
             <Select
               id="rsvp-attendance"
@@ -135,6 +119,22 @@ export function RsvpForm({
               required
             >
               {rsvp.attendanceOptions.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field label={rsvp.countLabel} htmlFor="rsvp-count">
+            <Select
+              id="rsvp-count"
+              placeholder={rsvp.selectPlaceholder}
+              value={count}
+              onChange={(e) => setCount(e.target.value)}
+              required
+            >
+              {rsvp.countOptions.map((o) => (
                 <option key={o.value} value={o.value}>
                   {o.label}
                 </option>
