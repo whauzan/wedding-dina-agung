@@ -37,14 +37,14 @@ export function InvitationIntro() {
         <motion.p
           {...fade}
           transition={{ duration: 0.6 }}
-          className="font-serif text-2xl italic tracking-widest"
+          className="font-serif text-2xl italic"
         >
           The Wedding of
         </motion.p>
         <motion.h1
           {...fade}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="font-serif text-4xl leading-tight font-semibold text-center"
+          className="font-prata text-4xl leading-tight text-center"
         >
           Agung Nugroho
           <br />
@@ -55,9 +55,10 @@ export function InvitationIntro() {
         <motion.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-serif text-2xl italic text-end"
+          className="font-serif text-2xl text-end"
         >
-          22 Agustus 2026
+          <span className="font-semibold italic">22 Agustus</span>{" "}
+          <span className="font-prata text-base">2026</span>
         </motion.p>
       </div>
     </main>
