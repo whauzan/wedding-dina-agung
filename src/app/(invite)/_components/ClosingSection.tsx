@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { closing } from "@/data/event";
 
@@ -17,40 +17,40 @@ export function ClosingSection() {
   return (
     <section className="relative flex flex-col">
       <div className="relative flex flex-col items-center gap-6 overflow-hidden px-8 pt-8 pb-24 text-center text-cream">
-        <motion.h2
+        <m.h2
           {...fade}
           transition={{ duration: 0.6 }}
           className="text-[clamp(1.75rem,8vw,2rem)] leading-none font-bold italic"
         >
           {closing.title}
-        </motion.h2>
+        </m.h2>
 
-        <motion.p
+        <m.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="max-w-md text-sm font-medium"
         >
           {closing.body}
-        </motion.p>
+        </m.p>
 
-        <motion.p
+        <m.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.25 }}
           className="text-sm font-medium"
         >
           {closing.signOff}
-        </motion.p>
+        </m.p>
 
-        <motion.p
+        <m.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.35 }}
           className="text-[clamp(1.25rem,6vw,1.5rem)] font-prata"
         >
           {closing.names}
-        </motion.p>
+        </m.p>
       </div>
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -58,14 +58,14 @@ export function ClosingSection() {
         className="-mt-16 z-10"
       >
         <Image
-          src="/footer.png"
+          src="/footer.webp"
           alt="Agung & Yudia"
           width={1720}
           height={906}
           sizes="(max-width: 480px) 100vw, 480px"
           className="w-full select-none"
         />
-      </motion.div>
+      </m.div>
     </section>
   );
 }

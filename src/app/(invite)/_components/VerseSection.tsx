@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 
 const fadeUp = (reduced: boolean) => ({
@@ -15,7 +15,7 @@ export function VerseSection() {
 
   return (
     <section className="min-h-dvh relative flex flex-col gap-6 items-center py-16 text-cream">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: reduced ? 1 : 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
@@ -23,15 +23,16 @@ export function VerseSection() {
         className="relative w-full"
       >
         <Image
-          src="/image1.png"
+          src="/image1.webp"
           alt="Pengantin mengenakan busana adat"
           width={1720}
           height={1240}
+          sizes="(max-width: 480px) 100vw, 480px"
           className="w-full select-none"
         />
-      </motion.div>
+      </m.div>
 
-      <motion.p
+      <m.p
         {...fade}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="max-w-md px-10 text-center text-base"
@@ -41,29 +42,29 @@ export function VerseSection() {
         merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan
         sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda
         (kebesaran Allah) bagi kaum yang berpikir
-      </motion.p>
+      </m.p>
 
-      <motion.p
+      <m.p
         {...fade}
         transition={{ duration: 0.6, delay: 0.35 }}
         className="text-xs font-semibold"
       >
         QS Ar Rum 21
-      </motion.p>
+      </m.p>
 
-      <motion.div
+      <m.div
         {...fade}
         transition={{ duration: 0.6, delay: 0.5 }}
         className="rotate-90 -mt-16"
       >
         <Image
-          src="/ornament-flower.svg"
+          src="/ornament-flower.webp"
           alt=""
           width={1908}
           height={3234}
           className="w-[clamp(8rem,32vw,10rem)] select-none"
         />
-      </motion.div>
+      </m.div>
     </section>
   );
 }

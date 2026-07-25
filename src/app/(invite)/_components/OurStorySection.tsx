@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { MOMENTS_BLUR } from "./momentsBlur";
 
@@ -13,7 +13,7 @@ const fadeUp = (reduced: boolean) => ({
 
 const STORY = {
   body: "Within the hall of our university, our hearts first pound each other. Though time and distance led us apart, the thread that bound us never truly broke. Years later, destiny brought us back together, and our hearts found their way home—into each other, and into a lifetime of love.",
-  photo: "/our-story.png",
+  photo: "/our-story.webp",
 };
 
 const MOMENTS_QUOTE = '"A moment is better when shared with you."';
@@ -63,13 +63,13 @@ function MomentsGallery() {
   return (
     <>
       {/* Featured image with a spotlight vignette + crossfade on selection. */}
-      <motion.div
+      <m.div
         {...fade}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="relative z-10 aspect-3/4 w-full max-w-xs self-center overflow-hidden bg-black"
       >
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={active}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -86,7 +86,7 @@ function MomentsGallery() {
               blurDataURL={MOMENTS_BLUR[active]}
               className="object-cover select-none"
             />
-          </motion.div>
+          </m.div>
         </AnimatePresence>
         {/* Spotlight vignette — dark corners, lit center. */}
         <div
@@ -97,10 +97,10 @@ function MomentsGallery() {
               "radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.7) 100%)",
           }}
         />
-      </motion.div>
+      </m.div>
 
       {/* Thumbnail strip — horizontal scroll, taps swap the featured image. */}
-      <motion.div
+      <m.div
         ref={stripRef}
         {...fade}
         transition={{ duration: 0.6, delay: 0.3 }}
@@ -141,7 +141,7 @@ function MomentsGallery() {
             )}
           </button>
         ))}
-      </motion.div>
+      </m.div>
     </>
   );
 }
@@ -154,7 +154,7 @@ export function OurStorySection() {
     <section className="relative flex min-h-dvh flex-col gap-6 overflow-hidden px-8 py-8 text-cream">
       {/* Top-left forget-me-not floral, per the mockup. */}
       <Image
-        src="/ornament.svg"
+        src="/ornament.webp"
         alt=""
         width={384}
         height={320}
@@ -163,16 +163,16 @@ export function OurStorySection() {
       />
 
       {/* --- Our Story --- */}
-      <motion.h2
+      <m.h2
         {...fade}
         transition={{ duration: 0.6 }}
         className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Our Story
-      </motion.h2>
+      </m.h2>
 
       <div className="flex flex-col items-center gap-4">
-        <motion.div
+        <m.div
           {...fade}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="relative aspect-3/4 w-2/5 shrink-0 overflow-hidden rounded-t-full"
@@ -184,39 +184,39 @@ export function OurStorySection() {
             sizes="(max-width: 480px) 45vw, 160px"
             className="object-cover select-none"
           />
-        </motion.div>
+        </m.div>
 
-        <motion.p
+        <m.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="max-w-md text-center text-base font-medium"
         >
           {STORY.body}
-        </motion.p>
+        </m.p>
       </div>
 
       {/* --- Our Moments --- */}
-      <motion.h2
+      <m.h2
         {...fade}
         transition={{ duration: 0.6 }}
         className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Our Moments
-      </motion.h2>
+      </m.h2>
 
-      <motion.p
+      <m.p
         {...fade}
         transition={{ duration: 0.6, delay: 0.1 }}
         className="max-w-md self-center text-center text-base font-medium"
       >
         {MOMENTS_QUOTE}
-      </motion.p>
+      </m.p>
 
       <MomentsGallery />
 
       {/* Bottom-right forget-me-not floral, per the mockup. */}
       <Image
-        src="/ornament.svg"
+        src="/ornament.webp"
         alt=""
         width={384}
         height={362}

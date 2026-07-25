@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 
 export type MusicPlayerHandle = {
   /** Start playback. Safe to call from a user-gesture handler (envelope tap). */
@@ -28,7 +28,6 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle>(
   function MusicPlayer(_props, ref) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [playing, setPlaying] = useState(false);
-    const reduced = useReducedMotion();
 
     useImperativeHandle(ref, () => ({
       play: () => {
@@ -70,32 +69,28 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle>(
 
     return (
       <>
-        <audio ref={audioRef} src="/song.m4a" loop preload="auto" />
+        <audio ref={audioRef} src="/song.m4a" loop preload="none" />
 
-        <motion.button
+        <m.button
           type="button"
           onClick={toggle}
           aria-label={playing ? "Jeda musik" : "Putar musik"}
           aria-pressed={playing}
           className="fixed right-4 bottom-4 z-50 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-slate/90 text-cream shadow-lg ring-1 ring-cream/40 backdrop-blur-sm"
-          animate={
-            playing && !reduced ? { rotate: 360 } : { rotate: 0 }
-          }
-          transition={
-            playing && !reduced
-              ? { repeat: Infinity, ease: "linear", duration: 6 }
-              : { duration: 0.2 }
-          }
           whileTap={{ scale: 0.92 }}
         >
           {/* Vinyl disc: outer ring + spindle hole, with a "paused" pause-bar
-              overlay when stopped so the control reads clearly either way. */}
+              overlay when stopped so the control reads clearly either way. The
+              spin is a pure CSS keyframe (GPU-composited, no per-frame JS) that
+              only runs while playing; `.music-disc--spin` is gated on
+              prefers-reduced-motion in globals.css so it also degrades there. */}
           <svg
             width="22"
             height="22"
             viewBox="0 0 24 24"
             fill="none"
             aria-hidden="true"
+            className={playing ? "music-disc--spin" : undefined}
           >
             <circle
               cx="12"
@@ -123,7 +118,7 @@ export const MusicPlayer = forwardRef<MusicPlayerHandle>(
               </svg>
             </span>
           )}
-        </motion.button>
+        </m.button>
       </>
     );
   },

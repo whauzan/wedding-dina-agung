@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import type { GuestType } from "@/lib/guests";
 import { wedding, type EventDetails } from "@/data/event";
@@ -26,7 +26,7 @@ function EventBlock({
   const fade = fadeUp(!!reduced);
 
   return (
-    <motion.div
+    <m.div
       {...fade}
       transition={{ duration: 0.6, delay }}
       className="flex flex-col items-center gap-4 text-center"
@@ -72,7 +72,7 @@ function EventBlock({
         </p>
       </div>
       <ButtonLink href={event.mapsUrl}>Lihat Peta</ButtonLink>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -104,15 +104,15 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
       <TornEdge flip />
 
       <div className="bg-ash text-text-primary relative z-10 flex size-full flex-col items-center justify-center gap-6">
-        <motion.p
+        <m.p
           {...fade}
           transition={{ duration: 0.6 }}
           className="text-[clamp(1.75rem,8vw,2rem)] italic font-bold"
         >
           Save the Date!
-        </motion.p>
+        </m.p>
 
-        <motion.div
+        <m.div
           {...fade}
           transition={{ duration: 0.6, delay: 0.1 }}
           className={cn(
@@ -122,13 +122,13 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
           )}
         >
           <Image
-            src="/floral-gate.svg"
+            src="/floral-gate.webp"
             alt=""
             width={205}
             height={204}
             className="w-full select-none"
           />
-        </motion.div>
+        </m.div>
 
         {isAkadResepsi && (
           <EventBlock event={wedding.akad} delay={0.2} paired={isAkadResepsi} />

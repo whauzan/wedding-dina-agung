@@ -31,7 +31,7 @@ body {
    (mounted once in the (invite) layout) instead of a per-section fill, so the
    grain is continuous across section boundaries — no cut where sections meet.
 
-   The tile (public/texture-seamless.png) is the source texture stacked above a
+   The tile (public/texture-seamless.webp) is the source texture stacked above a
    vertically-flipped copy, so every vertical repeat boundary is a mirror join
    and `repeat-y` tiles down the full page height with no visible seam. The
    layer sits inside the scrolling column (position: absolute, full content
@@ -44,7 +44,7 @@ body {
   pointer-events: none;
   opacity: 0.35;
   mix-blend-mode: soft-light;
-  background-image: url("/texture-seamless.png");
+  background-image: url("/texture-seamless.webp");
   background-repeat: repeat-y;
   background-position: top center;
   /* Match the source tile's native width so the mirrored rows land exactly on
@@ -289,4 +289,21 @@ body {
   background-color: var(--admin-accent-soft);
   color: var(--admin-accent);
   border-color: transparent;
+}
+
+/* Background-music disc spin. Pure CSS (GPU-composited transform, no per-frame
+   JS) applied to the vinyl SVG only while audio plays. Replaces a Framer Motion
+   `repeat: Infinity` loop that ran rAF for the whole visit. */
+@keyframes music-disc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.music-disc--spin {
+  animation: music-disc-spin 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-disc--spin {
+    animation: none;
+  }
 }

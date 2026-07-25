@@ -16,8 +16,8 @@ export async function GET(request: Request) {
       : 20;
   const offset = Number.isInteger(offsetRaw) && offsetRaw > 0 ? offsetRaw : 0;
 
-  const { wishes, total } = await listWishes(limit, offset);
-  return Response.json({ wishes, total });
+  const { wishes } = await listWishes(limit, offset);
+  return Response.json({ wishes });
 }
 
 // Public — submit a wish. The API route validates input; the insert uses the

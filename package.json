@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "optimize:moments": "node scripts/optimize-moments.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "prepare": "husky"
   },
   "dependencies": {

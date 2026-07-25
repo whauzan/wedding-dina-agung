@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Guest, GuestType } from "@/lib/guests";
 import { renderWaMessage } from "@/lib/wa";
@@ -63,13 +63,19 @@ export function GuestManager({
     router.refresh();
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Hapus tamu ini?")) return;
-    await fetch(`/api/guests/${id}`, { method: "DELETE" });
-    router.refresh();
-  }
+  // Stable callbacks so the memoized GuestRow doesn't re-render on every
+  // keystroke in the add-form (which re-renders this parent). They take the
+  // guest identifiers as args instead of closing over a specific row.
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (!confirm("Hapus tamu ini?")) return;
+      await fetch(`/api/guests/${id}`, { method: "DELETE" });
+      router.refresh();
+    },
+    [router],
+  );
 
-  async function handleCopyLink(slug: string, id: string) {
+  const handleCopyLink = useCallback(async (slug: string, id: string) => {
     const url = `${window.location.origin}/${slug}`;
     await navigator.clipboard.writeText(url);
     setCopiedId(id);
@@ -77,7 +83,19 @@ export function GuestManager({
       () => setCopiedId((current) => (current === id ? null : current)),
       1500,
     );
-  }
+  }, []);
+
+  const handleSendWa = useCallback(
+    (guest: Guest) => openWhatsapp(guest, template),
+    [template],
+  );
+
+  const handleStartEdit = useCallback((id: string) => setEditingId(id), []);
+  const handleCancelEdit = useCallback(() => setEditingId(null), []);
+  const handleSaved = useCallback(() => {
+    setEditingId(null);
+    router.refresh();
+  }, [router]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -157,15 +175,12 @@ export function GuestManager({
                 key={guest.id}
                 guest={guest}
                 isEditing={editingId === guest.id}
-                onStartEdit={() => setEditingId(guest.id)}
-                onCancelEdit={() => setEditingId(null)}
-                onSaved={() => {
-                  setEditingId(null);
-                  router.refresh();
-                }}
-                onDelete={() => handleDelete(guest.id)}
-                onCopyLink={() => handleCopyLink(guest.slug, guest.id)}
-                onSendWa={() => openWhatsapp(guest, template)}
+                onStartEdit={handleStartEdit}
+                onCancelEdit={handleCancelEdit}
+                onSaved={handleSaved}
+                onDelete={handleDelete}
+                onCopyLink={handleCopyLink}
+                onSendWa={handleSendWa}
                 copied={copiedId === guest.id}
               />
             ))}
@@ -183,7 +198,7 @@ export function GuestManager({
   );
 }
 
-function GuestRow({
+const GuestRow = memo(function GuestRow({
   guest,
   isEditing,
   onStartEdit,
@@ -196,12 +211,12 @@ function GuestRow({
 }: {
   guest: Guest;
   isEditing: boolean;
-  onStartEdit: () => void;
+  onStartEdit: (id: string) => void;
   onCancelEdit: () => void;
   onSaved: () => void;
-  onDelete: () => void;
-  onCopyLink: () => void;
-  onSendWa: () => void;
+  onDelete: (id: string) => void;
+  onCopyLink: (slug: string, id: string) => void;
+  onSendWa: (guest: Guest) => void;
   copied: boolean;
 }) {
   const [name, setName] = useState(guest.name);
@@ -285,7 +300,7 @@ function GuestRow({
         {guest.phone ? (
           <button
             type="button"
-            onClick={onSendWa}
+            onClick={() => onSendWa(guest)}
             className="admin-action admin-action--wa"
           >
             <Image
@@ -302,15 +317,23 @@ function GuestRow({
       </td>
       <td>
         <div className="flex gap-4">
-          <button type="button" onClick={onCopyLink} className="admin-action">
+          <button
+            type="button"
+            onClick={() => onCopyLink(guest.slug, guest.id)}
+            className="admin-action"
+          >
             {copied ? "Tersalin!" : "Salin link"}
           </button>
-          <button type="button" onClick={onStartEdit} className="admin-action">
+          <button
+            type="button"
+            onClick={() => onStartEdit(guest.id)}
+            className="admin-action"
+          >
             Edit
           </button>
           <button
             type="button"
-            onClick={onDelete}
+            onClick={() => onDelete(guest.id)}
             className="admin-action admin-action--danger"
           >
             Hapus
@@ -319,7 +342,7 @@ function GuestRow({
       </td>
     </tr>
   );
-}
+});
 
 // Sample values used only for the live preview inside the editor.
 const PREVIEW_NAME = "Budi Santoso";

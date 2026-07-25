@@ -1,18 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import { rsvp, type Attendance } from "@/data/event";
 import { cn } from "@/lib/cn";
 import { Button } from "./ui/Button";
 import { Field, fieldSurface } from "./ui/Field";
 import { Select } from "./ui/Select";
 
-const fadeUp = (reduced: boolean) => ({
-  initial: { opacity: 0, y: reduced ? 0 : 12 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-});
+// Hoisted to module scope so the two possible variants are stable object
+// identities — no new object per render (this form re-renders on every
+// keystroke). Indexed by the reduced-motion boolean.
+const FADE_UP = {
+  full: {
+    initial: { opacity: 0, y: 12 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+  },
+  reduced: {
+    initial: { opacity: 0, y: 0 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+  },
+} as const;
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -24,7 +34,7 @@ export function RsvpForm({
   guestSlug: string | null;
 }) {
   const reduced = useReducedMotion();
-  const fade = fadeUp(!!reduced);
+  const fade = reduced ? FADE_UP.reduced : FADE_UP.full;
 
   // Prefill the name from the invite, but let the guest edit it (the fallback
   // "Tamu" guest shouldn't lock in a placeholder name).
@@ -64,34 +74,34 @@ export function RsvpForm({
   return (
     <div className="flex w-full flex-col items-center gap-6 py-8">
       <div className="flex flex-col items-center gap-2 text-center">
-        <motion.h2
+        <m.h2
           {...fade}
           transition={{ duration: 0.6 }}
           className="text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
         >
           {rsvp.title}
-        </motion.h2>
+        </m.h2>
         {status !== "success" && (
-          <motion.p
+          <m.p
             {...fade}
             transition={{ duration: 0.6, delay: 0.05 }}
             className="text-base font-medium"
           >
             {rsvp.subtitle}
-          </motion.p>
+          </m.p>
         )}
       </div>
 
       {status === "success" ? (
-        <motion.p
+        <m.p
           initial={{ opacity: 0, y: reduced ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="max-w-xs rounded-sm bg-cream px-4 py-6 text-center text-base text-ink"
         >
           {rsvp.success}
-        </motion.p>
+        </m.p>
       ) : (
-        <motion.form
+        <m.form
           {...fade}
           transition={{ duration: 0.6, delay: 0.1 }}
           onSubmit={submit}
@@ -157,7 +167,7 @@ export function RsvpForm({
           >
             {status === "submitting" ? rsvp.submitting : rsvp.submit}
           </Button>
-        </motion.form>
+        </m.form>
       )}
     </div>
   );

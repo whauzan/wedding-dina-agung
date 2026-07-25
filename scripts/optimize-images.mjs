@@ -1,0 +1,184 @@
+// One-time image optimizer for the invitation's static assets.
+//
+// Three job kinds, all backed by sharp:
+//   1. "moments" — the 20-image gallery (public/moments{1..20}.jpg). Downscaled
+//      WebP written back under the SAME .jpg names (browsers/Next sniff content,
+//      not extension), plus a base64 blur map for placeholder="blur".
+//   2. "photo"   — a single oversized raster (bride/groom/verse/footer/story).
+//      Downscaled + EXIF-stripped; JPEG sources keep their .jpg name, PNG photos
+//      are re-encoded to .webp (a .png holding webp bytes would be mis-typed).
+//   3. "svg-raster" — a Figma "SVG" that is really one base64 PNG wrapped in
+//      <svg> with layout transforms (rotate/mirror). We RASTERIZE the SVG with
+//      sharp (transforms baked in, exactly as the browser renders it) at ~2x the
+//      display size, then write a real .webp referenced via next/image. Note:
+//      we rasterize the SVG rather than yanking the raw embedded PNG, because
+//      several of these SVGs rotate/mirror the bitmap (e.g. ornament-corner
+//      rotate(180), ornament matrix(-1 ...)) — the raw payload would be
+//      mis-oriented.
+//
+// Overwrites/creates files in public/. Reads originals from SRC_DIR if set
+// (a pristine backup, for re-runs), else from public/ in place.
+// Run: `pnpm run optimize:images`.
+
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "..");
+const PUBLIC = join(ROOT, "public");
+const SRC_DIR = process.env.SRC_DIR || PUBLIC;
+const BLUR_MODULE = join(
+  ROOT,
+  "src",
+  "app",
+  "(invite)",
+  "_components",
+  "momentsBlur.ts",
+);
+
+const MOMENTS_MAX_EDGE = 1080; // 2x+ headroom over the 320px featured display
+const MOMENTS_QUALITY = 80;
+const BLUR_WIDTH = 16;
+
+// Single-photo jobs: { in, out, maxEdge }. `out` differs from `in` only for the
+// PNG->WebP conversions (component src references are updated to match).
+const PHOTOS = [
+  { in: "bride.jpg", out: "bride.jpg", maxEdge: 800 },
+  { in: "groom.jpg", out: "groom.jpg", maxEdge: 800 },
+  { in: "image1.png", out: "image1.webp", maxEdge: 1000 },
+  { in: "footer.png", out: "footer.webp", maxEdge: 1000 },
+  { in: "our-story.png", out: "our-story.webp", maxEdge: 640 },
+  // Full-page CSS background texture (referenced from globals.css). Keep its
+  // native geometry (mirror-tile math depends on 430x1864) — only re-encode.
+  { in: "texture-seamless.png", out: "texture-seamless.webp", maxEdge: null },
+];
+
+// Fake-SVG (base64-PNG-in-SVG) jobs: extract embedded raster -> WebP. maxEdge
+// caps the extracted bitmap; these are decorative ornaments displayed small.
+const SVG_RASTERS = [
+  { in: "ornament-corner.svg", out: "ornament-corner.webp", maxEdge: 600 },
+  { in: "ornament.svg", out: "ornament.webp", maxEdge: 800 },
+  { in: "ornament-flower.svg", out: "ornament-flower.webp", maxEdge: 800 },
+  { in: "floral-gate.svg", out: "floral-gate.webp", maxEdge: 900 },
+  { in: "floral-forget-me-not-top.svg", out: "floral-forget-me-not-top.webp", maxEdge: 700 },
+  { in: "floral-forget-me-not-bottom.svg", out: "floral-forget-me-not-bottom.webp", maxEdge: 700 },
+  { in: "ornament-rsvp.svg", out: "ornament-rsvp.webp", maxEdge: 700 },
+];
+
+function fmtKB(bytes) {
+  return `${(bytes / 1024).toFixed(0)} KB`;
+}
+
+async function origSize(name) {
+  try {
+    return (await readFile(join(SRC_DIR, name))).length;
+  } catch {
+    return 0;
+  }
+}
+
+// --- 1. moments -----------------------------------------------------------
+async function optimizeMoments() {
+  const re = /^moments(\d+)\.jpg$/i;
+  const files = (await readdir(SRC_DIR))
+    .map((name) => {
+      const m = name.match(re);
+      return m ? { name, index: Number(m[1]) } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.index - b.index);
+
+  if (files.length === 0) {
+    console.log("moments: none found, skipping\n");
+    return 0;
+  }
+
+  console.log(`moments (${files.length}):`);
+  const blurByIndex = [];
+  let total = 0;
+
+  for (const { name, index } of files) {
+    const base = sharp(join(SRC_DIR, name)).rotate();
+    const optimized = await base
+      .clone()
+      .resize({ width: MOMENTS_MAX_EDGE, height: MOMENTS_MAX_EDGE, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: MOMENTS_QUALITY })
+      .toBuffer();
+    const blur = await base
+      .clone()
+      .resize({ width: BLUR_WIDTH, fit: "inside" })
+      .webp({ quality: 40 })
+      .toBuffer();
+
+    await writeFile(join(PUBLIC, name), optimized);
+    blurByIndex[index - 1] = `data:image/webp;base64,${blur.toString("base64")}`;
+    total += optimized.length;
+  }
+
+  const entries = blurByIndex.map((v) => `  ${JSON.stringify(v ?? "")},`);
+  await writeFile(
+    BLUR_MODULE,
+    `// AUTO-GENERATED by scripts/optimize-images.mjs — do not edit by hand.
+// Tiny base64 WebP blur-up placeholders for the "Our Moments" gallery,
+// one per public/moments{n}.jpg (index n-1). Regenerate: pnpm run optimize:images
+export const MOMENTS_BLUR: string[] = [
+${entries.join("\n")}
+];
+`,
+  );
+  console.log(`  -> ${fmtKB(total)} total + blur map\n`);
+  return total;
+}
+
+// --- 2. photos ------------------------------------------------------------
+async function optimizePhoto({ in: src, out, maxEdge }) {
+  const before = await origSize(src);
+  const pipeline = sharp(join(SRC_DIR, src)).rotate();
+  if (maxEdge) {
+    pipeline.resize({ width: maxEdge, height: maxEdge, fit: "inside", withoutEnlargement: true });
+  }
+  // Preserve alpha for RGBA sources (WebP supports it); JPEG stays opaque.
+  const buf = await pipeline.webp({ quality: 80 }).toBuffer();
+  await writeFile(join(PUBLIC, out), buf);
+  const arrow = src === out ? src : `${src} -> ${out}`;
+  console.log(`  ${arrow.padEnd(48)} ${fmtKB(before)} -> ${fmtKB(buf.length)}`);
+  return buf.length;
+}
+
+// --- 3. svg-raster --------------------------------------------------------
+// Rasterize the whole SVG (transforms baked in) to WebP. `density` upscales the
+// SVG render so the ~192px-wide ornaments stay crisp on retina.
+async function optimizeSvgRaster({ in: src, out, maxEdge }) {
+  const before = await origSize(src);
+  const buf = await sharp(join(SRC_DIR, src), { density: 200 })
+    .resize({ width: maxEdge, height: maxEdge, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 82 }) // keep ornament edges crisp; alpha preserved
+    .toBuffer();
+  await writeFile(join(PUBLIC, out), buf);
+  console.log(`  ${`${src} -> ${out}`.padEnd(48)} ${fmtKB(before)} -> ${fmtKB(buf.length)}`);
+  return buf.length;
+}
+
+async function run() {
+  console.log(`Reading originals from: ${SRC_DIR}\n`);
+  let total = 0;
+
+  total += await optimizeMoments();
+
+  console.log("photos:");
+  for (const job of PHOTOS) total += await optimizePhoto(job);
+  console.log("");
+
+  console.log("svg rasters:");
+  for (const job of SVG_RASTERS) total += await optimizeSvgRaster(job);
+  console.log("");
+
+  console.log(`All optimized output: ${fmtKB(total)}`);
+}
+
+run().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

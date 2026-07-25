@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { RsvpForm } from "./RsvpForm";
 import { WishesWall } from "./WishesWall";
@@ -37,7 +37,7 @@ export function RsvpWishesSection({
       <TornEdge flip />
 
       <div className="bg-ash text-text-primary relative z-20 flex size-full flex-col items-center gap-4 py-2">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: reduced ? 0 : 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -45,14 +45,14 @@ export function RsvpWishesSection({
           className="w-full max-w-md"
         >
           <Image
-            src="/ornament-rsvp.svg"
+            src="/ornament-rsvp.webp"
             alt=""
             width={430}
             height={69}
             aria-hidden
             className="mx-auto w-full select-none"
           />
-        </motion.div>
+        </m.div>
 
         <div className="flex flex-col items-center size-full px-8 gap-4">
           <RsvpForm guestName={guestName} guestSlug={guestSlug} />

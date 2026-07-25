@@ -21,22 +21,26 @@ export const FALLBACK_GUEST: Pick<Guest, "name" | "type"> = {
 export async function listGuests(): Promise<Guest[]> {
   const { data, error } = await getSupabaseAdmin()
     .from("guests")
-    .select("*")
+    .select("id, created_at, name, type, slug, phone")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
   return data as Guest[];
 }
 
-export async function getGuestBySlug(slug: string): Promise<Guest | null> {
+/** Resolve a slug to the fields the invite page renders (name + variant). The
+ *  friendly-fallback guest is the same shape, so callers never need the rest. */
+export async function getGuestBySlug(
+  slug: string,
+): Promise<Pick<Guest, "name" | "type"> | null> {
   const { data, error } = await getSupabaseAdmin()
     .from("guests")
-    .select("*")
+    .select("name, type")
     .eq("slug", slug)
     .maybeSingle();
 
   if (error) throw error;
-  return data as Guest | null;
+  return data as Pick<Guest, "name" | "type"> | null;
 }
 
 async function slugExists(slug: string): Promise<boolean> {

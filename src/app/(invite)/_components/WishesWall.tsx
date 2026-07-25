@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { memo, useEffect, useState } from "react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { wishes as copy } from "@/data/event";
 import { cn } from "@/lib/cn";
 import { Button } from "./ui/Button";
 import { Field, fieldSurface } from "./ui/Field";
 import { WishBoxFrame } from "./ui/WishBoxFrame";
 
-const fadeUp = (reduced: boolean) => ({
-  initial: { opacity: 0, y: reduced ? 0 : 12 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-});
+// Hoisted to module scope: stable variant identities, no new object per render
+// (this component re-renders on every keystroke in the name/message inputs).
+const FADE_UP = {
+  full: {
+    initial: { opacity: 0, y: 12 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+  },
+  reduced: {
+    initial: { opacity: 0, y: 0 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+  },
+} as const;
 
 type Wish = {
   id: string;
@@ -22,6 +31,43 @@ type Wish = {
 
 type Status = "idle" | "submitting" | "error";
 
+/** The scrolling wish cards. Memoized + split out so typing in the form's
+ *  name/message inputs (which re-renders the parent every keystroke) doesn't
+ *  re-run this AnimatePresence list diff over every card. */
+const WishList = memo(function WishList({
+  list,
+  reduced,
+}: {
+  list: Wish[];
+  reduced: boolean;
+}) {
+  return (
+    <div className="flex max-h-64 flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-track-ash scrollbar-thumb-text-primary pr-1">
+      <AnimatePresence initial={false}>
+        {list.map((wish) => (
+          <m.div
+            key={wish.id}
+            layout={!reduced}
+            initial={{ opacity: 0, y: reduced ? 0 : -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduced ? 0.15 : 0.35 }}
+            className="relative text-cream"
+          >
+            {/* Hand-drawn frame stretches to the card's text-driven height. */}
+            <WishBoxFrame className="absolute inset-0 z-0 h-full w-full" />
+            <div className="relative z-10 flex flex-col gap-2 px-5 py-3">
+              <p className="text-sm font-bold text-text-primary">{wish.name}</p>
+              <p className="text-sm font-medium leading-relaxed wrap-break-word">
+                {wish.message}
+              </p>
+            </div>
+          </m.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+});
+
 export function WishesWall({
   guestName,
   guestSlug,
@@ -30,7 +76,7 @@ export function WishesWall({
   guestSlug: string | null;
 }) {
   const reduced = useReducedMotion();
-  const fade = fadeUp(!!reduced);
+  const fade = reduced ? FADE_UP.reduced : FADE_UP.full;
 
   const [name, setName] = useState(guestName === "Tamu" ? "" : guestName);
   const [message, setMessage] = useState("");
@@ -85,23 +131,23 @@ export function WishesWall({
   return (
     <div className="flex w-full flex-col items-center gap-4">
       <div className="flex flex-col items-center gap-2 text-center">
-        <motion.h2
+        <m.h2
           {...fade}
           transition={{ duration: 0.6 }}
           className="text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
         >
           {copy.title}
-        </motion.h2>
-        <motion.p
+        </m.h2>
+        <m.p
           {...fade}
           transition={{ duration: 0.6, delay: 0.05 }}
           className="text-base font-medium"
         >
           {copy.subtitle}
-        </motion.p>
+        </m.p>
       </div>
 
-      <motion.form
+      <m.form
         {...fade}
         transition={{ duration: 0.6, delay: 0.1 }}
         onSubmit={submit}
@@ -148,7 +194,7 @@ export function WishesWall({
         >
           {status === "submitting" ? copy.submitting : copy.submit}
         </Button>
-      </motion.form>
+      </m.form>
 
       {/* Wishes list — scrolls within a bounded panel so the section stays a
           phone-height column rather than growing unbounded. */}
@@ -158,31 +204,7 @@ export function WishesWall({
             {copy.empty}
           </p>
         ) : (
-          <div className="flex max-h-64 flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-track-ash scrollbar-thumb-text-primary pr-1">
-            <AnimatePresence initial={false}>
-              {list.map((wish) => (
-                <motion.div
-                  key={wish.id}
-                  layout={!reduced}
-                  initial={{ opacity: 0, y: reduced ? 0 : -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduced ? 0.15 : 0.35 }}
-                  className="relative text-cream"
-                >
-                  {/* Hand-drawn frame stretches to the card's text-driven height. */}
-                  <WishBoxFrame className="absolute inset-0 z-0 h-full w-full" />
-                  <div className="relative z-10 flex flex-col gap-2 px-5 py-3">
-                    <p className="text-sm font-bold text-text-primary">
-                      {wish.name}
-                    </p>
-                    <p className="text-sm font-medium leading-relaxed wrap-break-word">
-                      {wish.message}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+          <WishList list={list} reduced={!!reduced} />
         )}
       </div>
     </div>

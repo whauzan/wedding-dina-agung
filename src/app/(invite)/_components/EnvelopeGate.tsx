@@ -1,19 +1,39 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import dynamic from "next/dynamic";
+import {
+  AnimatePresence,
+  LazyMotion,
+  domMax,
+  m,
+  useReducedMotion,
+} from "motion/react";
 import { useScrollLock } from "../_hooks/useScrollLock";
 import { MusicPlayer, type MusicPlayerHandle } from "./MusicPlayer";
 import { InvitationIntro } from "./InvitationIntro";
 import { VerseSection } from "./VerseSection";
 import { GroomBrideSection } from "./GroomBrideSection";
-import { OurStorySection } from "./OurStorySection";
 import { EventDetailsSection } from "./EventDetailsSection";
-import { WeddingGiftSection } from "./WeddingGiftSection";
-import { RsvpWishesSection } from "./RsvpWishesSection";
 import { ClosingSection } from "./ClosingSection";
 import type { GuestType } from "@/lib/guests";
 import Image from "next/image";
+
+// Heavy, below-the-fold sections that only appear after the envelope opens.
+// Code-split so their JS (gallery, forms, fetch) isn't in the pre-tap bundle.
+// ssr:false is fine — they only render client-side post-interaction.
+const OurStorySection = dynamic(
+  () => import("./OurStorySection").then((mod) => mod.OurStorySection),
+  { ssr: false },
+);
+const WeddingGiftSection = dynamic(
+  () => import("./WeddingGiftSection").then((mod) => mod.WeddingGiftSection),
+  { ssr: false },
+);
+const RsvpWishesSection = dynamic(
+  () => import("./RsvpWishesSection").then((mod) => mod.RsvpWishesSection),
+  { ssr: false },
+);
 
 type Phase = "sealed" | "opening" | "expanding" | "slate" | "names";
 
@@ -72,6 +92,10 @@ export function EnvelopeGate({
   const isSlate = phase === "slate" || phase === "names";
 
   return (
+    // Single LazyMotion provider for the whole invite tree. Every section uses
+    // the lightweight `m` component; features load once here. `domMax` (not
+    // `domAnimation`) because WishesWall uses `layout` animations.
+    <LazyMotion features={domMax}>
     <div className="relative flex min-h-screen w-full flex-1 flex-col overflow-hidden">
       {/* Background music. Mounted once for the whole experience so playback,
           started on the envelope tap, survives every phase transition. */}
@@ -106,7 +130,7 @@ export function EnvelopeGate({
             {(phase === "sealed" ||
               phase === "opening" ||
               phase === "expanding") && (
-              <motion.div
+              <m.div
                 key="envelope"
                 className={
                   phase === "expanding"
@@ -116,15 +140,15 @@ export function EnvelopeGate({
                 exit={{ opacity: 0 }}
                 transition={{ duration: reduced ? 0.15 : 0.3 }}
               >
-                <motion.p
+                <m.p
                   className="font-serif text-[clamp(1.25rem,6vw,1.5rem)] text-ink"
                   animate={{ opacity: phase === "sealed" ? 1 : 0 }}
                   transition={{ duration: reduced ? 0.15 : 0.25 }}
                 >
                   Hi, {guestName}!
-                </motion.p>
+                </m.p>
 
-                <motion.button
+                <m.button
                   type="button"
                   onClick={handleOpen}
                   aria-label="Buka undangan"
@@ -158,7 +182,7 @@ export function EnvelopeGate({
                     className="w-full select-none"
                   />
                   {(phase === "sealed" || phase === "opening") && (
-                    <motion.img
+                    <m.img
                       src="/seal.png"
                       alt="seal"
                       className="absolute top-[55%] left-1/2 w-[clamp(5.5rem,26vw,7rem)] -translate-x-1/2 -translate-y-1/2 select-none"
@@ -178,23 +202,23 @@ export function EnvelopeGate({
                       }}
                     />
                   )}
-                </motion.button>
+                </m.button>
 
-                <motion.p
+                <m.p
                   className="font-serif text-[clamp(1.25rem,6vw,1.5rem)] tracking-wide text-ink/70 italic"
                   animate={{ opacity: phase === "sealed" ? 1 : 0 }}
                   transition={{ duration: reduced ? 0.15 : 0.25 }}
                 >
                   Klik surat untuk membukanya
-                </motion.p>
-              </motion.div>
+                </m.p>
+              </m.div>
             )}
           </AnimatePresence>
 
           {/* Floral "You are invited to" beat */}
           <AnimatePresence>
             {phase === "slate" && (
-              <motion.div
+              <m.div
                 key="floral"
                 className="flex flex-col items-center gap-1 text-center"
                 initial={{ opacity: 0, y: reduced ? 0 : 12 }}
@@ -203,7 +227,7 @@ export function EnvelopeGate({
                 transition={{ duration: reduced ? 0.2 : 0.6 }}
               >
                 <Image
-                  src="/floral-forget-me-not-top.svg"
+                  src="/floral-forget-me-not-top.webp"
                   alt="floral"
                   width={384}
                   height={320}
@@ -213,13 +237,13 @@ export function EnvelopeGate({
                   You are invited to
                 </p>
                 <Image
-                  src="/floral-forget-me-not-bottom.svg"
+                  src="/floral-forget-me-not-bottom.webp"
                   alt="floral"
                   width={384}
                   height={362}
                   className="w-[clamp(11rem,42vw,13rem)] select-none"
                 />
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>
@@ -239,5 +263,6 @@ export function EnvelopeGate({
         </>
       )}
     </div>
+    </LazyMotion>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { wedding, type BankAccount } from "@/data/event";
 import { cn } from "@/lib/cn";
@@ -49,7 +49,7 @@ function BankCard({ bank, delay }: { bank: BankAccount; delay: number }) {
   };
 
   return (
-    <motion.div
+    <m.div
       {...fade}
       transition={{ duration: 0.6, delay }}
       className="flex w-full max-w-xs items-center gap-2.5"
@@ -82,7 +82,7 @@ function BankCard({ bank, delay }: { bank: BankAccount; delay: number }) {
           </button>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -100,46 +100,46 @@ export function WeddingGiftSection() {
       )}
     >
       {/* Header line-floral, per the mockup. */}
-      <motion.div
+      <m.div
         {...fade}
         transition={{ duration: 0.6 }}
         className="-rotate-90 transform scale-x-[-1] -my-16"
       >
         <Image
-          src="/ornament-flower.svg"
+          src="/ornament-flower.webp"
           alt=""
           width={160}
           height={120}
           aria-hidden
           className="w-28 select-none"
         />
-      </motion.div>
+      </m.div>
 
-      <motion.h2
+      <m.h2
         {...fade}
         transition={{ duration: 0.6, delay: 0.1 }}
         className="text-center text-[clamp(1.75rem,8vw,2rem)] font-bold italic"
       >
         Wedding Gift
-      </motion.h2>
+      </m.h2>
 
       <div className="flex flex-col gap-4">
         {INTRO.map((text, i) => (
-          <motion.p
+          <m.p
             key={i}
             {...fade}
             transition={{ duration: 0.6, delay: 0.15 + i * 0.1 }}
             className="max-w-md text-center text-base font-medium"
           >
             {text}
-          </motion.p>
+          </m.p>
         ))}
       </div>
 
       {/* Collapsed: the toggle. Expanded: reveals cashless + kirim kado. */}
       <AnimatePresence initial={false} mode="wait">
         {!open ? (
-          <motion.button
+          <m.button
             key="toggle"
             type="button"
             onClick={() => setOpen(true)}
@@ -158,9 +158,9 @@ export function WeddingGiftSection() {
               className="size-5 select-none"
             />
             <span className="text-lg">Klik Di Sini</span>
-          </motion.button>
+          </m.button>
         ) : (
-          <motion.div
+          <m.div
             key="details"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -170,13 +170,13 @@ export function WeddingGiftSection() {
           >
             {/* --- Cashless --- */}
             <DividerIcon src="/icon_wallet.svg" />
-            <motion.p
+            <m.p
               {...fade}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-[clamp(1.25rem,6vw,1.5rem)] font-bold italic"
             >
               ~ Cashless ~
-            </motion.p>
+            </m.p>
 
             <div className="flex flex-col items-center gap-6">
               {banks.map((bank, i) => (
@@ -186,15 +186,15 @@ export function WeddingGiftSection() {
 
             {/* --- Kirim Kado --- */}
             <DividerIcon src="/icon_gift.svg" />
-            <motion.p
+            <m.p
               {...fade}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-[clamp(1.25rem,6vw,1.5rem)] font-bold italic"
             >
               ~ Kirim Kado ~
-            </motion.p>
+            </m.p>
 
-            <motion.div
+            <m.div
               {...fade}
               transition={{ duration: 0.6, delay: 0.15 }}
               className="flex flex-col items-center gap-4 text-center"
@@ -208,8 +208,8 @@ export function WeddingGiftSection() {
                   {address.detail}
                 </p>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </section>
