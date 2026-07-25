@@ -8,6 +8,7 @@ import { VerseSection } from "./VerseSection";
 import { GroomBrideSection } from "./GroomBrideSection";
 import { OurStorySection } from "./OurStorySection";
 import { EventDetailsSection } from "./EventDetailsSection";
+import { WeddingGiftSection } from "./WeddingGiftSection";
 import type { GuestType } from "@/lib/guests";
 import Image from "next/image";
 
@@ -219,6 +220,7 @@ export function EnvelopeGate({
           <GroomBrideSection />
           <EventDetailsSection guestType={guestType} />
           <OurStorySection />
+          <WeddingGiftSection />
         </>
       )}
     </div>
