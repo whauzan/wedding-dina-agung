@@ -12,8 +12,7 @@ export async function GET() {
     name: rsvp.guest_name,
     attendance: rsvp.attendance,
     guest_count: rsvp.guest_count,
-    event: rsvp.event,
-    message: rsvp.message,
+    event: rsvp.invited_type,
     created_at: rsvp.created_at,
   }));
 

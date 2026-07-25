@@ -10,6 +10,7 @@ export type Guest = {
   name: string;
   type: GuestType;
   slug: string;
+  phone: string | null;
 };
 
 export const FALLBACK_GUEST: Pick<Guest, "name" | "type"> = {
@@ -52,12 +53,13 @@ async function slugExists(slug: string): Promise<boolean> {
 export async function createGuest(input: {
   name: string;
   type: GuestType;
+  phone: string | null;
 }): Promise<Guest> {
   const slug = await generateUniqueSlug(input.name, slugExists);
 
   const { data, error } = await getSupabaseAdmin()
     .from("guests")
-    .insert({ name: input.name, type: input.type, slug })
+    .insert({ name: input.name, type: input.type, slug, phone: input.phone })
     .select()
     .single();
 
@@ -67,11 +69,11 @@ export async function createGuest(input: {
 
 export async function updateGuest(
   id: string,
-  input: { name: string; type: GuestType },
+  input: { name: string; type: GuestType; phone: string | null },
 ): Promise<Guest> {
   const { data, error } = await getSupabaseAdmin()
     .from("guests")
-    .update({ name: input.name, type: input.type })
+    .update({ name: input.name, type: input.type, phone: input.phone })
     .eq("id", id)
     .select()
     .single();

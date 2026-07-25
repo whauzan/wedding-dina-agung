@@ -1,5 +1,6 @@
 import { assertAdminApi } from "@/lib/auth";
 import { deleteGuest, updateGuest, type GuestType } from "@/lib/guests";
+import { normalizePhone } from "@/lib/phone";
 
 const VALID_TYPES: GuestType[] = ["akad_resepsi", "resepsi"];
 
@@ -14,6 +15,8 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const type = body?.type;
+  const phone =
+    typeof body?.phone === "string" ? normalizePhone(body.phone) : null;
 
   if (!name) {
     return Response.json({ error: "Name is required" }, { status: 400 });
@@ -22,7 +25,7 @@ export async function PATCH(
     return Response.json({ error: "Invalid guest type" }, { status: 400 });
   }
 
-  const guest = await updateGuest(id, { name, type });
+  const guest = await updateGuest(id, { name, type, phone });
   return Response.json(guest);
 }
 

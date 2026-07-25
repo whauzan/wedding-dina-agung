@@ -1,5 +1,6 @@
 import { assertAdminApi } from "@/lib/auth";
 import { createGuest, listGuests, type GuestType } from "@/lib/guests";
+import { normalizePhone } from "@/lib/phone";
 
 const VALID_TYPES: GuestType[] = ["akad_resepsi", "resepsi"];
 
@@ -18,6 +19,9 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const type = body?.type;
+  // Phone is optional; normalize to wa.me format or null.
+  const phone =
+    typeof body?.phone === "string" ? normalizePhone(body.phone) : null;
 
   if (!name) {
     return Response.json({ error: "Name is required" }, { status: 400 });
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
   // create raced us for the same slug (Postgres unique_violation = 23505).
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
-      const guest = await createGuest({ name, type });
+      const guest = await createGuest({ name, type, phone });
       return Response.json(guest, { status: 201 });
     } catch (error) {
       const isUniqueViolation =

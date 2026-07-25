@@ -6,10 +6,12 @@ const ATTENDANCE_LABEL: Record<string, string> = {
   ragu: "Ragu-ragu",
 };
 
-const EVENT_LABEL: Record<string, string> = {
-  akad: "Akad",
+// Guest invitation type → label shown in the "Acara" column. The RSVP form
+// doesn't ask which event a guest will attend, so this reflects what they were
+// invited to (resolved from the guests table via guest_slug).
+const INVITED_TYPE_LABEL: Record<string, string> = {
+  akad_resepsi: "Akad & Resepsi",
   resepsi: "Resepsi",
-  keduanya: "Keduanya",
 };
 
 export default async function AdminRsvpPage() {
@@ -36,7 +38,6 @@ export default async function AdminRsvpPage() {
               <th className="py-2 pr-4">Kehadiran</th>
               <th className="py-2 pr-4">Jumlah</th>
               <th className="py-2 pr-4">Acara</th>
-              <th className="py-2 pr-4">Pesan</th>
               <th className="py-2 pr-4">Waktu</th>
             </tr>
           </thead>
@@ -49,9 +50,10 @@ export default async function AdminRsvpPage() {
                 </td>
                 <td className="py-2 pr-4">{rsvp.guest_count ?? "-"}</td>
                 <td className="py-2 pr-4">
-                  {rsvp.event ? EVENT_LABEL[rsvp.event] : "-"}
+                  {rsvp.invited_type
+                    ? INVITED_TYPE_LABEL[rsvp.invited_type]
+                    : "-"}
                 </td>
-                <td className="py-2 pr-4">{rsvp.message ?? "-"}</td>
                 <td className="py-2 pr-4 text-ink/50">
                   {new Date(rsvp.created_at).toLocaleString("id-ID")}
                 </td>
@@ -59,7 +61,7 @@ export default async function AdminRsvpPage() {
             ))}
             {rsvps.length === 0 && (
               <tr>
-                <td colSpan={6} className="py-6 text-center text-ink/50">
+                <td colSpan={5} className="py-6 text-center text-ink/50">
                   Belum ada RSVP.
                 </td>
               </tr>

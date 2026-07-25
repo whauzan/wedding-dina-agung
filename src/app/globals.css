@@ -18,6 +18,7 @@
   --color-text-primary: var(--color-text-primary);
   --font-serif: var(--font-cormorant);
   --font-prata: var(--font-prata);
+  --font-inter: var(--font-inter);
 }
 
 body {
