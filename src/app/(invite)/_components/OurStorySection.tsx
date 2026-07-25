@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { MOMENTS_BLUR } from "./momentsBlur";
@@ -35,16 +35,22 @@ function MomentsGallery() {
   const reduced = useReducedMotion();
   const fade = fadeUp(!!reduced);
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const stripRef = useRef<HTMLDivElement | null>(null);
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  // Mirrors `active` so the auto-advance interval reads the latest index
+  // without re-subscribing on every change (avoids a stale closure).
+  const activeRef = useRef(0);
+  const resumeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Select a moment and slide its thumbnail to the center of the strip. We
   // measure the on-screen centers of the thumbnail and the strip and shift the
   // strip's current scrollLeft by their difference — immune to offsetParent /
   // section padding / positioning. scrollTo clamps the target, so index 0 stays
   // left-aligned and the last stays right-aligned.
-  const select = (i: number) => {
+  const goTo = (i: number) => {
     setActive(i);
+    activeRef.current = i;
     const strip = stripRef.current;
     const thumb = thumbRefs.current[i];
     if (!strip || !thumb) return;
@@ -59,6 +65,35 @@ function MomentsGallery() {
       behavior: reduced ? "auto" : "smooth",
     });
   };
+
+  // A tap takes over: jump to the picked moment, pause auto-scroll, then resume
+  // after ~6s of idle. Each tap debounces the resume so rapid tapping keeps it
+  // paused until the user settles.
+  const select = (i: number) => {
+    goTo(i);
+    setPaused(true);
+    if (resumeRef.current) clearTimeout(resumeRef.current);
+    resumeRef.current = setTimeout(() => setPaused(false), 6000);
+  };
+
+  // Auto-advance every 3s, wrapping last → first. Off under reduced motion or
+  // while paused by a recent tap.
+  useEffect(() => {
+    if (reduced || paused) return;
+    const id = setInterval(() => {
+      goTo((activeRef.current + 1) % MOMENTS.length);
+    }, 3000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduced, paused]);
+
+  // Clear the pending resume timer on unmount.
+  useEffect(
+    () => () => {
+      if (resumeRef.current) clearTimeout(resumeRef.current);
+    },
+    [],
+  );
 
   return (
     <>
