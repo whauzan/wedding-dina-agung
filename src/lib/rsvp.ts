@@ -30,11 +30,23 @@ export async function listRsvps(): Promise<RsvpWithInvite[]> {
     .order("created_at", { ascending: false });
 
   if (error) throw error;
-  const rows = rsvps as Rsvp[];
+  const allRows = rsvps as Rsvp[];
 
-  const slugs = [
-    ...new Set(rows.map((r) => r.guest_slug).filter((s): s is string => !!s)),
-  ];
+  // Submissions are append-only (POST /api/rsvp never overwrites), so a guest
+  // who confirms twice has multiple rows. For the admin view + export we keep
+  // only each guest's latest confirmation, identified by guest_slug. Rows are
+  // already sorted newest-first, so the first time we see a slug is its latest.
+  // Null-slug rows (fallback / unknown-slug visitors) have no real identity, so
+  // they're never merged — each is kept as its own row.
+  const seenSlugs = new Set<string>();
+  const rows = allRows.filter((r) => {
+    if (!r.guest_slug) return true;
+    if (seenSlugs.has(r.guest_slug)) return false;
+    seenSlugs.add(r.guest_slug);
+    return true;
+  });
+
+  const slugs = [...seenSlugs];
 
   const typeBySlug = new Map<string, GuestType>();
   if (slugs.length > 0) {
