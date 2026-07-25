@@ -89,7 +89,7 @@ export function EventDetailsSection({ guestType }: { guestType: GuestType }) {
   const isAkadResepsi = guestType === "akad_resepsi";
 
   return (
-    <section className="relative flex min-h-dvh flex-col items-center justify-center bg-texture py-12">
+    <section className="relative flex min-h-dvh flex-col items-center justify-center py-12">
       <TornEdge />
       <TornEdge flip />
 
