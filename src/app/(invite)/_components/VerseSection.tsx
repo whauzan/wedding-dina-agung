@@ -20,7 +20,7 @@ export function VerseSection() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="relative w-full max-w-md"
+        className="relative w-full"
       >
         <Image
           src="/image1.png"

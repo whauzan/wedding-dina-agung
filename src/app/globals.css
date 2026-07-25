@@ -48,7 +48,7 @@ body {
   background-position: top center;
   /* Match the source tile's native width so the mirrored rows land exactly on
      the 932px boundary; height auto preserves the mirror geometry. */
-  background-size: 430px auto;
+  background-size: 480px auto;
 }
 
 /* Fixed variant for the envelope gate, whose own cream->slate color layer is

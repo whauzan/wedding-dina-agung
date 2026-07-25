@@ -158,7 +158,7 @@ export function WishesWall({
             {copy.empty}
           </p>
         ) : (
-          <div className="flex max-h-64 flex-col gap-3 overflow-y-auto pr-1">
+          <div className="flex max-h-64 flex-col gap-3 overflow-y-auto scrollbar-thin scrollbar-track-ash scrollbar-thumb-text-primary pr-1">
             <AnimatePresence initial={false}>
               {list.map((wish) => (
                 <motion.div
