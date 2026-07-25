@@ -35,7 +35,8 @@ export const wedding = {
     venueName: "Masjid Raya Baitul Mukhtar BSD",
     address:
       "Jl. BSD Raya Pusat, Pagedangan, Kec. Pagedangan, Kabupaten Tangerang, Banten 15339",
-    mapsUrl: "https://maps.app.goo.gl/XjBVJUJ45FiGMXiE8",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baitul+Mukhtar+BSD",
   } satisfies EventDetails,
   resepsi: {
     label: "Resepsi",
@@ -45,7 +46,8 @@ export const wedding = {
     venueName: "Masjid Raya Baitul Mukhtar BSD",
     address:
       "Jl. BSD Raya Pusat, Pagedangan, Kec. Pagedangan, Kabupaten Tangerang, Banten 15339",
-    mapsUrl: "https://maps.app.goo.gl/XjBVJUJ45FiGMXiE8",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Masjid+Raya+Baitul+Mukhtar+BSD",
   } satisfies EventDetails,
   gift: {
     banks: [
