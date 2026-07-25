@@ -105,6 +105,13 @@ export const rsvp = {
   ] satisfies { value: Attendance; label: string }[],
 };
 
+export const closing = {
+  title: "Terima Kasih",
+  body: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan do'a restu kepada kami.",
+  signOff: "Kami yang berbahagia,",
+  names: "Agung & Yudia",
+};
+
 export const wishes = {
   title: "Best Wishes",
   subtitle: "Sampaikan doa dan ucapan terbaik anda",
