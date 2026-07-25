@@ -90,13 +90,13 @@ export function EnvelopeGate({
           transition: `background-color ${reduced ? 200 : 500}ms ease`,
         }}
       />
-      <div className="bg-texture fixed inset-0 z-0" />
+      <div className="invite-texture invite-texture--fixed" aria-hidden="true" />
 
       {/* Envelope + floral stage. Unmounted in the `names` phase so it no
           longer occupies flex space above InvitationIntro, letting the intro
           fill the full-height column. */}
       {phase !== "names" && (
-        <div className="relative z-30 flex flex-1 flex-col items-center justify-center px-10 py-16">
+        <div className="relative z-30 flex flex-1 flex-col items-center justify-center py-16">
           {/* Sealed -> opening (slight-open art + seal slide-off) -> expanding
               (envelope itself scales up to cover the viewport, taking over
               the "wipe" role) beat. Fixed positioning kicks in once we start
@@ -110,8 +110,8 @@ export function EnvelopeGate({
                 key="envelope"
                 className={
                   phase === "expanding"
-                    ? "fixed inset-0 z-40 flex flex-col items-center justify-center gap-0 text-center"
-                    : "flex flex-col items-center gap-0 text-center"
+                    ? "fixed inset-0 z-40 w-full flex flex-col items-center justify-center gap-0 text-center"
+                    : "flex flex-col w-full items-center gap-0 text-center"
                 }
                 exit={{ opacity: 0 }}
                 transition={{ duration: reduced ? 0.15 : 0.3 }}
@@ -129,7 +129,7 @@ export function EnvelopeGate({
                   onClick={handleOpen}
                   aria-label="Buka undangan"
                   disabled={phase !== "sealed"}
-                  className="relative w-104 cursor-pointer"
+                  className="relative w-full cursor-pointer"
                   style={{ transformOrigin: "center" }}
                   animate={
                     phase === "opening"

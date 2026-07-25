@@ -14,7 +14,7 @@ export function InvitationIntro() {
   const fade = fadeUp(!!reduced);
 
   return (
-    <main className="bg-texture min-h-dvh relative flex flex-1 flex-col items-center justify-center bg-slate px-10 py-24 text-cream">
+    <main className="min-h-dvh relative flex flex-1 flex-col items-center justify-center px-10 py-24 text-cream">
       <Image
         src="/ornament.svg"
         alt=""

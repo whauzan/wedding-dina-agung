@@ -95,7 +95,7 @@ export function WeddingGiftSection() {
   return (
     <section
       className={cn(
-        "bg-texture relative flex min-h-dvh flex-col items-center gap-6 overflow-hidden bg-slate px-8 py-12 text-cream",
+        "relative flex min-h-dvh flex-col items-center gap-6 overflow-hidden px-8 py-12 text-cream",
         !open && "justify-center",
       )}
     >

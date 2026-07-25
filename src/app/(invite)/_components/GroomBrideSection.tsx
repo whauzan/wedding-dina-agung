@@ -91,7 +91,7 @@ export function GroomBrideSection() {
   const fade = fadeUp(!!reduced);
 
   return (
-    <section className="bg-texture min-h-dvh bg-slate relative flex flex-col items-center justify-center gap-6 overflow-hidden px-8 text-cream">
+    <section className="min-h-dvh relative flex flex-col items-center justify-center gap-6 overflow-hidden px-8 text-cream">
       <Image
         src="/ornament-corner.svg"
         alt=""

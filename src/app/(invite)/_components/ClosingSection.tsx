@@ -16,7 +16,7 @@ export function ClosingSection() {
 
   return (
     <section className="relative flex flex-col">
-      <div className="bg-texture relative flex flex-col items-center gap-6 overflow-hidden bg-slate px-8 pt-8 pb-24 text-center text-cream">
+      <div className="relative flex flex-col items-center gap-6 overflow-hidden px-8 pt-8 pb-24 text-center text-cream">
         <motion.h2
           {...fade}
           transition={{ duration: 0.6 }}

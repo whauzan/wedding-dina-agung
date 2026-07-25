@@ -14,7 +14,7 @@ export function VerseSection() {
   const fade = fadeUp(!!reduced);
 
   return (
-    <section className="bg-texture min-h-dvh relative flex flex-col gap-6 items-center bg-slate py-16 text-cream">
+    <section className="min-h-dvh relative flex flex-col gap-6 items-center py-16 text-cream">
       <motion.div
         initial={{ opacity: 0, scale: reduced ? 1 : 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}

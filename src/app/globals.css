@@ -26,21 +26,34 @@ body {
   font-family: var(--font-cormorant), serif;
 }
 
-/* Plaster/paper texture from mockups, tiled at low opacity with a soft-light
-   blend so it reads as subtle grain rather than a visible repeating image. */
-.bg-texture {
-  position: relative;
-}
+/* Plaster/paper texture from mockups. One overlay for the whole invite column
+   (mounted once in the (invite) layout) instead of a per-section fill, so the
+   grain is continuous across section boundaries — no cut where sections meet.
 
-.bg-texture::before {
-  content: "";
+   The tile (public/texture-seamless.png) is the source texture stacked above a
+   vertically-flipped copy, so every vertical repeat boundary is a mirror join
+   and `repeat-y` tiles down the full page height with no visible seam. The
+   layer sits inside the scrolling column (position: absolute, full content
+   height) so the texture scrolls WITH the content like real paper, rather than
+   sitting fixed like glass. Soft-light + low opacity keeps it as subtle grain. */
+.invite-texture {
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   opacity: 0.35;
   mix-blend-mode: soft-light;
-  background-image: url("/texture.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background-image: url("/texture-seamless.png");
+  background-repeat: repeat-y;
+  background-position: top center;
+  /* Match the source tile's native width so the mirrored rows land exactly on
+     the 932px boundary; height auto preserves the mirror geometry. */
+  background-size: 430px auto;
+}
+
+/* Fixed variant for the envelope gate, whose own cream->slate color layer is
+   position: fixed and would otherwise cover the layout's absolute texture. This
+   pins the same grain to the viewport for the duration of the gate animation. */
+.invite-texture--fixed {
+  position: fixed;
 }

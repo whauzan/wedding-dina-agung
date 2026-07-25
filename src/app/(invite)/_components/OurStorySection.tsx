@@ -148,7 +148,7 @@ export function OurStorySection() {
   const fade = fadeUp(!!reduced);
 
   return (
-    <section className="bg-texture relative flex min-h-dvh flex-col gap-6 overflow-hidden bg-slate px-8 py-8 text-cream">
+    <section className="relative flex min-h-dvh flex-col gap-6 overflow-hidden px-8 py-8 text-cream">
       {/* Top-left forget-me-not floral, per the mockup. */}
       <Image
         src="/ornament.svg"
