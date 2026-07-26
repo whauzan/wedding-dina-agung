@@ -117,8 +117,8 @@ function MomentsGallery() {
               alt={`Moment ${active + 1}`}
               fill
               sizes="(max-width: 480px) 90vw, 320px"
-              placeholder="blur"
-              blurDataURL={MOMENTS_BLUR[active]}
+              // placeholder="blur"
+              // blurDataURL={MOMENTS_BLUR[active]}
               className="object-cover select-none"
             />
           </motion.div>
@@ -159,8 +159,8 @@ function MomentsGallery() {
               fill
               sizes="112px"
               quality={80}
-              placeholder="blur"
-              blurDataURL={MOMENTS_BLUR[i]}
+              // placeholder="blur"
+              // blurDataURL={MOMENTS_BLUR[i]}
               className="object-cover select-none"
             />
             {/* Painted brush frame (Figma "Rectangle 5") on the active thumb. */}
