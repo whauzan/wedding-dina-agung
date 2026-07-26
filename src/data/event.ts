@@ -30,7 +30,7 @@ export const wedding = {
   akad: {
     label: "Akad",
     day: "Sabtu",
-    date: "22 08 2026",
+    date: "22.08.2026",
     time: "08:00 - 09:00",
     venueName: "Masjid Raya Baitul Mukhtar BSD",
     address:
@@ -41,7 +41,7 @@ export const wedding = {
   resepsi: {
     label: "Resepsi",
     day: "Sabtu",
-    date: "22 08 2026",
+    date: "22.08.2026",
     time: "11:00 - 13:00",
     venueName: "Masjid Raya Baitul Mukhtar BSD",
     address:
